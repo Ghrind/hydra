@@ -7,15 +7,18 @@ module Hydra
     }
 
     def self.char_to_event(char : Int32) String
-      LOGGER.debug("Key pressed charcode: #{char}")
       return "keypress.unknown" unless CHARS_TO_EVENTS.has_key?(char)
       CHARS_TO_EVENTS[char]
     end
 
-    def initialize(view : View, socket : Socket)
-      @view = view
-      @socket = socket
+    def initialize
+      @register = {} of String => EventInterface
       @bindings = {} of String => Array(Binding)
+    end
+
+    def register(key : String, event_interface : EventInterface)
+      raise "Id already registered" if @register[key]?
+      @register[key] = event_interface
     end
 
     def bind(event : String, target : String, behavior : String)
@@ -26,17 +29,13 @@ module Hydra
     def broadcast(event : String)
       return unless @bindings.has_key?(event)
       @bindings[event].each do |binding|
-        if binding.target == "client"
-          @socket.puts binding.behavior
-        else
-          trigger(binding.target, binding.behavior, binding.params)
-        end
+        trigger(binding.target, binding.behavior, binding.params)
       end
     end
 
     def trigger(target : String, behavior : String, params : String)
-      element = @view.element(target)
-      element.do(behavior, params) if element
+      return unless @register[target]?
+      @register[target].trigger(behavior, params)
     end
   end
 end

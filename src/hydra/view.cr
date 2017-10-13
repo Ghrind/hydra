@@ -2,9 +2,12 @@ require "crt"
 
 module Hydra
   class View
-    def initialize
-      @win = Crt::Window.new(20, 60)
+    property :event_interface
+    @event_interface : EventInterface
+    def initialize(x = 20, y = 60)
+      @win = Crt::Window.new(x, y)
       @elements = Array(Element).new
+      @event_interface = EventInterface.new
     end
 
     def getch()
@@ -14,7 +17,7 @@ module Hydra
     def render
       @win.clear
       @elements.each do |el|
-        render_element(el)
+        render_element(el) if el.visible
       end
       @win.refresh
     end

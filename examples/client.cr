@@ -1,3 +1,4 @@
+# This is a client that is supposed to communicate with the application.cr example
 require "socket"
 require "json"
 

@@ -1,3 +1,4 @@
+# TODO: This is obsolete and should be updated using the latest hydra interface
 require "../src/hydra"
 require "socket"
 require "logger"

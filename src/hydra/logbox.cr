@@ -3,7 +3,8 @@ module Hydra
     getter :width
     getter :height
 
-    def initialize(width : Int32, height : Int32)
+    def initialize(id : String, width : Int32, height : Int32)
+      super
       @width = width
       @height = height
       @messages = Array(String).new
