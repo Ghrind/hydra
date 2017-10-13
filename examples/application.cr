@@ -1,14 +1,18 @@
+require "../src/hydra"
+require "socket"
+require "logger"
+require "json"
+
 class Application
   def initialize
-    @view = uninitialized View
-    @event_hub = uninitialized EventHub
+    @view = uninitialized Hydra::View
+    @event_hub = uninitialized Hydra::EventHub
   end
   def start
     server = TCPServer.new("0.0.0.0", 8080)
-    win = Crt::Window.new(20, 60)
-    @view = View.new(win)
+    @view = Hydra::View.new
     socket = server.accept
-    @event_hub = EventHub.new(@view, socket)
+    @event_hub = Hydra::EventHub.new(@view, socket)
     @view.render
     spawn do
       loop do
@@ -20,11 +24,11 @@ class Application
       end
     end
     loop do
-      char = win.getch
+      char = @view.getch
       sleep 0.01
       next unless char >= 0
-      LOGGER.debug "event triggered: #{EventHub.char_to_event(char)}"
-      @event_hub.broadcast(EventHub.char_to_event(char))
+      LOGGER.debug "event triggered: #{Hydra::EventHub.char_to_event(char)}"
+      @event_hub.broadcast(Hydra::EventHub.char_to_event(char))
       @view.render
     end
     Fiber.yield
@@ -36,7 +40,7 @@ class Application
       if instruction["element"]?
         case instruction["element"]
         when "log_box"
-          @view.add_element(LogBox.new(instruction["width"].as_i, instruction["height"].as_i))
+          @view.add_element(Hydra::LogBox.new(instruction["width"].as_i, instruction["height"].as_i))
         end
       elsif instruction["bind"]?
         @event_hub.bind(instruction["bind"].as_s, instruction["target"].as_s, instruction["behavior"].as_s)
@@ -47,3 +51,11 @@ class Application
     @view.render
   end
 end
+
+LOGGER = Logger.new(File.new("./debug.log", "w"))
+LOGGER.level = Logger::DEBUG
+
+LOGGER.debug("Starting...")
+
+app = Application.new
+app.start
