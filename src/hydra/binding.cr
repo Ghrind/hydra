@@ -4,7 +4,7 @@ module Hydra
     getter :behavior
     getter :params
 
-    def initialize(target : String, behavior : String, params = "")
+    def initialize(target : String, behavior : String, params = Hash(Symbol, String).new)
       @target = target
       @behavior = behavior
       @params = params

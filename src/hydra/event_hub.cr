@@ -7,7 +7,7 @@ module Hydra
     }
 
     def self.char_to_event(char : Int32) String
-      return "keypress.unknown" unless CHARS_TO_EVENTS.has_key?(char)
+      return "keypress.##{char}" unless CHARS_TO_EVENTS.has_key?(char)
       CHARS_TO_EVENTS[char]
     end
 
@@ -27,13 +27,19 @@ module Hydra
     end
 
     def broadcast(event : String)
-      return unless @bindings.has_key?(event)
-      @bindings[event].each do |binding|
-        trigger(binding.target, binding.behavior, binding.params)
+      if @bindings.has_key?(event)
+        @bindings[event].each do |binding|
+          trigger(binding.target, binding.behavior, binding.params.merge({:event => event}))
+        end
+      end
+      if @bindings.has_key?("*")
+        @bindings["*"].each do |binding|
+          trigger(binding.target, binding.behavior, binding.params.merge({:event => event}))
+        end
       end
     end
 
-    def trigger(target : String, behavior : String, params : String)
+    def trigger(target : String, behavior : String, params : Hash(Symbol, String))
       return unless @register[target]?
       @register[target].trigger(behavior, params)
     end
