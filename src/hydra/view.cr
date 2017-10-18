@@ -26,7 +26,7 @@ module Hydra
       @elements << element
     end
 
-    def element(name) Element
+    def element(name) : Element
       @elements.find { |e| e.name == name }
     end
 

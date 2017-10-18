@@ -18,5 +18,6 @@ eh.register("prompt-1", prompt_1.event_interface)
 v.add_element(prompt_1)
 eh.bind("keypress.c", "prompt-1", "show")
 eh.bind("prompt-1.submit", "application", "exit")
+eh.bind("keypress.enter", "prompt-1", "submit")
 
 a.start

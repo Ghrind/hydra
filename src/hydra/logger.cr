@@ -3,9 +3,12 @@ module Hydra
     def initialize(target : Hydra::Logger)
       @target = target
     end
-    def trigger(behavior : String, payload : Hash(Symbol, String))
+    def trigger(behavior : String, payload : Hash(Symbol, String)) : Array(String)
       if behavior == "debug"
         @target.debug "#{payload}"
+        Array(String).new
+      else
+        super
       end
     end
   end

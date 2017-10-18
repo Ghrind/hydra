@@ -3,7 +3,8 @@ module Hydra
     CHARS_TO_EVENTS = {
       338 => "keypress.page_down",
       339 => "keypress.page_up",
-      99  => "keypress.c"
+      99  => "keypress.c",
+      13  => "keypress.enter"
     }
 
     def self.char_to_event(char : Int32) String
@@ -40,8 +41,11 @@ module Hydra
     end
 
     def trigger(target : String, behavior : String, params : Hash(Symbol, String))
-      return unless @register[target]?
-      @register[target].trigger(behavior, params)
+      return Array(String).new unless @register[target]?
+      events = @register[target].trigger(behavior, params)
+      events.each do |event|
+        broadcast event
+      end
     end
   end
 end
