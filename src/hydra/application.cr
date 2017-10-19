@@ -4,7 +4,7 @@ module Hydra
     def initialize(target : Application)
       @target = target
     end
-    def trigger(behavior : String, payload : Hash(Symbol, String)) : Array(String)
+    def trigger(behavior : String, payload = Hash(Symbol, String)) : Array(String)
       if behavior == "stop"
         @target.stop
         Array(String).new

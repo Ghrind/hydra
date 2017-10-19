@@ -18,8 +18,23 @@ prompt_1 = Hydra::Prompt.build("prompt-1")
 prompt_1.hide
 eh.register("prompt-1", prompt_1.event_interface)
 v.add_element(prompt_1)
-eh.bind("keypress.c", "prompt-1", "show")
+
 eh.bind("prompt-1.submit", "application", "stop")
 eh.bind("keypress.enter", "prompt-1", "submit")
+
+eh.bind("keypress.c") do |event_hub|
+  event_hub.interfaces("prompt-1").trigger("show")
+end
+
+# Pressing q will quit
+eh.bind("keypress.q", "application", "stop")
+
+# Pressing s will quit in 2 seconds
+eh.bind("keypress.s") do |event_hub|
+  spawn do
+    sleep 2
+    event_hub.interfaces("application").trigger("stop")
+  end
+end
 
 a.start

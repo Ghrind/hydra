@@ -4,6 +4,8 @@ module Hydra
       338 => "keypress.page_down",
       339 => "keypress.page_up",
       99  => "keypress.c",
+      113 => "keypress.q",
+      115 => "keypress.s",
       13  => "keypress.enter"
     }
 
@@ -27,10 +29,27 @@ module Hydra
       @bindings[event] << Binding.new(target, behavior)
     end
 
+    def bind(event : String, &block : EventHub -> Nil)
+      @bindings[event] = Array(Binding).new unless @bindings.has_key?(event)
+      @bindings[event] << Binding.new(block)
+    end
+
+    def interfaces(id : String) : EventInterface
+      if @register[id]?
+        @register[id]
+      else
+        EventInterface.new
+      end
+    end
+
     def broadcast(event : String)
       if @bindings.has_key?(event)
         @bindings[event].each do |binding|
-          trigger(binding.target, binding.behavior, binding.params.merge({:event => event}))
+          if binding.target == ""
+            binding.proc.call(self)
+          else
+            trigger(binding.target, binding.behavior, binding.params.merge({:event => event}))
+          end
         end
       end
       if @bindings.has_key?("*")
