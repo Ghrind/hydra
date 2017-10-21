@@ -9,11 +9,11 @@ module Hydra
       @target = target
       @behavior = behavior
       @params = params
-      @proc = ->( x : EventHub) {}
+      @proc = ->( x : EventHub, y : Event) { true }
     end
 
-    def initialize(block : Proc(EventHub, Nil))
-      @target = ""
+    def initialize(target : String, block : Proc(EventHub, Event, Bool))
+      @target = target
       @behavior = ""
       @params = Hash(Symbol, String).new
       @proc = block

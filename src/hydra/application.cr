@@ -36,7 +36,9 @@ module Hydra
         char = @view.getch
         sleep 0.01
         next unless char >= 0
-        @event_hub.broadcast(Hydra::EventHub.char_to_event(char))
+        event = Event.new("keypress.#{char.chr}")
+        event.char = char.chr.to_s
+        @event_hub.broadcast(event)
         @view.render
       end
       Crt.done

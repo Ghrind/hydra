@@ -4,7 +4,7 @@ module Hydra
     def initialize(target : Element)
       @target = target
     end
-    def trigger(behavior : String, payload = Hash(Symbol, String)) : Array(String)
+    def trigger(behavior : String, payload = Hash(Symbol, String).new) : Array(String)
       if behavior == "show"
         @target.show
         Array(String).new
@@ -52,6 +52,9 @@ module Hydra
 
     def hide
       @visible = false
+    end
+
+    def append(string : String)
     end
   end
 end
