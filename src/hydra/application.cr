@@ -28,6 +28,8 @@ module Hydra
       @view = view
       @event_interface = uninitialized ApplicationEventInterface
       @event_hub = event_hub
+      @logger = Logger.new(File.open("./debug.log", "w"))
+      @logger.level = Logger::DEBUG
     end
     def start
       @view.render
@@ -36,8 +38,10 @@ module Hydra
         char = @view.getch
         sleep 0.01
         next unless char >= 0
-        event = Event.new("keypress.#{char.chr}")
-        event.char = char.chr.to_s
+        @logger.debug "#{char}: #{char.chr}"
+        keypress = Keypress.new(char)
+        event = Event.new("keypress.#{keypress.name}")
+        event.keypress = keypress
         @event_hub.broadcast(event)
         @view.render
       end

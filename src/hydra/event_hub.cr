@@ -44,14 +44,6 @@ module Hydra
       @bindings[event] << Binding.new(target, block)
     end
 
-    def interfaces(id : String) : EventInterface
-      if @register[id]?
-        @register[id]
-      else
-        EventInterface.new
-      end
-    end
-
     def broadcast(event : Event)
       # TODO: Ugly
       parts = event.name.split(".")
@@ -72,7 +64,7 @@ module Hydra
       end
     end
 
-    def trigger(target : String, behavior : String, params : Hash(Symbol, String))
+    def trigger(target : String, behavior : String, params = Hash(Symbol, String).new)
       return Array(String).new unless @register[target]?
       events = @register[target].trigger(behavior, params)
       events.each do |event|

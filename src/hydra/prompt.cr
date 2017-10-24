@@ -5,13 +5,15 @@ module Hydra
     end
     def trigger(behavior : String, payload = Hash(Symbol, String).new) : Array(String)
       if behavior == "submit"
-        ["#{@target.id}.submit"]
+        return ["#{@target.id}.submit"]
       elsif behavior == "append"
         @target.append(payload[:char])
-        Array(String).new
+      elsif behavior == "remove_last"
+        @target.remove_last
       else
-        super
+        return super
       end
+      Array(String).new
     end
   end
   class Prompt < Element
@@ -34,6 +36,11 @@ module Hydra
 
     def append(string : String)
       @value += string
+    end
+
+    def remove_last
+      return if @value.size == 0
+      @value = @value[0..-2]
     end
   end
 end

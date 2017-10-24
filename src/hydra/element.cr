@@ -8,6 +8,9 @@ module Hydra
       if behavior == "show"
         @target.show
         Array(String).new
+      elsif behavior == "hide"
+        @target.hide
+        Array(String).new
       else
         super
       end
@@ -55,6 +58,9 @@ module Hydra
     end
 
     def append(string : String)
+    end
+
+    def remove_last
     end
   end
 end

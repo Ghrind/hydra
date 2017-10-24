@@ -14,35 +14,53 @@ eh.register("prompt-1", prompt_1.event_interface)
 v.add_element(prompt_1)
 
 eh.bind("prompt-1.submit", "application", "stop")
-eh.bind("keypress.enter", "prompt-1", "submit")
 
 eh.bind("keypress.c", "application") do |event_hub, _|
   if event_hub.has_focus?("prompt-1")
     true
   else
-    event_hub.interfaces("prompt-1").trigger("show")
+    event_hub.trigger("prompt-1", "show")
     event_hub.focus("prompt-1")
     false
   end
 end
 
 eh.bind("keypress.*", "prompt-1") do |event_hub, event|
-  if event_hub.has_focus?("prompt-1") && event.char
-    event_hub.interfaces("prompt-1").trigger("append", { :char => event.char })
-    false
+  keypress = event.keypress
+  if event_hub.has_focus?("prompt-1") && keypress
+    if keypress.char != ""
+      event_hub.trigger("prompt-1", "append", { :char => keypress.char })
+      false
+    elsif keypress.name == "backspace"
+      event_hub.trigger("prompt-1", "remove_last")
+      false
+    elsif keypress.name == "enter"
+      event_hub.trigger("prompt-1", "submit")
+      false
+    else
+      true
+    end
   else
     true
   end
 end
 
+# Pressing ctrl + a will close prompt-1
+eh.bind("keypress.ctrl-a", "application") do |event_hub, _|
+  event_hub.trigger("prompt-1", "hide")
+  event_hub.focus("")
+  true
+end
+
 # Pressing q will quit
 eh.bind("keypress.q", "application", "stop")
+
 
 # Pressing s will quit in 2 seconds
 eh.bind("keypress.s", "application") do |event_hub, _|
   spawn do
     sleep 2
-    event_hub.interfaces("application").trigger("stop")
+    event_hub.trigger("application", "stop")
   end
   true
 end

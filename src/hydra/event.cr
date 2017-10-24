@@ -1,11 +1,12 @@
 module Hydra
   class Event
     property :name
-    property :char
+    property :keypress
+    @keypress : Hydra::Keypress | Nil
 
     def initialize(name : String)
       @name = name
-      @char = ""
+      @keypress = nil
     end
   end
 end
