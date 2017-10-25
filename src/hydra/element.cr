@@ -18,6 +18,10 @@ module Hydra
   end
   class Element
 
+    KLASSES = {
+      "prompt" => Hydra::Prompt
+    }
+
     getter :id
     getter :visible
     property :position
@@ -31,6 +35,17 @@ module Hydra
       instance = new(id)
       instance.event_interface = ElementEventInterface.new(instance)
       instance
+    end
+
+    def self.build(specs : Hash(Symbol, String)) : Element
+      raise "Element is missing an id: #{specs}" unless specs[:id]?
+      id = specs[:id]
+      raise "Element is missing a type: #{specs}" unless specs[:type]?
+      klass = KLASSES[specs[:type]]
+      element = klass.build(id)
+      element.position = specs[:position] if specs[:position]?
+      element.hide if specs[:visible]? && specs[:visible] == "false"
+      element
     end
 
     def initialize(id : String)

@@ -31,6 +31,10 @@ module Hydra
       @focus = identifier
     end
 
+    def unfocus()
+      @focus = ""
+    end
+
     def has_focus?(identifier : String) : Bool
       @focus == identifier
     end

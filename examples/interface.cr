@@ -2,17 +2,27 @@ require "../src/hydra"
 
 app = Hydra::Application.setup
 
-prompt_1 = Hydra::Prompt.build("prompt-1")
-prompt_1.hide
-prompt_1.position = "5:20"
-app.add_element(prompt_1)
+app.add_element({
+  :id => "prompt-2",
+  :type => "prompt",
+  :position => "center",
+  :visible => "false"
+})
 
-prompt_2 = Hydra::Prompt.build("prompt-2")
-prompt_2.hide
-prompt_2.position = "center"
-app.add_element(prompt_2)
+app.add_element({
+  :id => "prompt-1",
+  :type => "prompt",
+  :position => "5:20",
+  :visible => "false"
+})
 
 app.bind("prompt-1.submit", "application", "stop")
+
+app.bind("prompt-2.submit", "application") do |event_hub, _|
+  event_hub.trigger("prompt-2", "hide")
+  event_hub.unfocus
+  false
+end
 
 app.bind("keypress.c", "application") do |event_hub, _|
   if event_hub.has_focus?("prompt-1")
@@ -37,7 +47,7 @@ end
 # Pressing ctrl + a will close prompt-1
 app.bind("keypress.ctrl-a", "application") do |event_hub, _|
   event_hub.trigger("prompt-1", "hide")
-  event_hub.focus("")
+  event_hub.unfocus
   true
 end
 
