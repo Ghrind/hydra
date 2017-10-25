@@ -72,7 +72,9 @@ module Hydra
 
     def add_element(element : Element)
       @view.add_element(element)
-      @event_hub.register(element.id, element.event_interface)
+      event_interface = element.event_interface
+      return unless event_interface
+      @event_hub.register(element.id, event_interface)
     end
 
     def add_element(specs : Hash(Symbol, String))

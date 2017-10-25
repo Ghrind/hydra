@@ -1,9 +1,5 @@
 module Hydra
   class PromptElementEventInterface < ElementEventInterface
-    def initialize(target : Prompt)
-      @target = target
-    end
-
     def trigger(behavior : String, payload = Hash(Symbol, String).new) : Array(String)
       if behavior == "submit"
         return ["#{@target.id}.submit"]

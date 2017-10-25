@@ -1,12 +1,33 @@
 module Hydra
-  class LogBox < Element
+  class LogboxEventInterface < ElementEventInterface
+    def trigger(behavior : String, payload = Hash(Symbol, String).new) : Array(String)
+      case behavior
+      when "scroll_up"
+        @target.scroll(1) if @target.can_scroll_up?
+      when "scroll_down"
+        @target.scroll(-1) if @target.can_scroll_down?
+      when "add_message"
+        @target.add_message payload["message"].to_s
+      end
+      Array(String).new
+    end
+  end
+  class Logbox < Element
     getter :width
     getter :height
 
-    def initialize(id : String, width : Int32, height : Int32)
+    # Workaround for the inability to use self in an initializer
+    # https://github.com/crystal-lang/crystal/issues/4436
+    def self.build(id : String)
+      instance = new(id)
+      instance.event_interface = LogboxEventInterface.new(instance)
+      instance
+    end
+
+    def initialize(id : String)
       super
-      @width = width
-      @height = height
+      @width = 50
+      @height = 10
       @messages = Array(String).new
       @scroll_index = 0
     end
@@ -29,17 +50,6 @@ module Hydra
 
     def name
       "logbox"
-    end
-
-    def do(behavior : String, params : String)
-      case behavior
-      when "scroll_up"
-        scroll(1) if can_scroll_up?
-      when "scroll_down"
-        scroll(-1) if can_scroll_down?
-      when "add_message"
-        add_message params
-      end
     end
 
     def max_scroll_index

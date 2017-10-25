@@ -19,7 +19,8 @@ module Hydra
   class Element
 
     KLASSES = {
-      "prompt" => Hydra::Prompt
+      "prompt" => Hydra::Prompt,
+      "logbox" => Hydra::Logbox
     }
 
     getter :id
@@ -27,7 +28,7 @@ module Hydra
     property :position
     @position : String
     property :event_interface
-    @event_interface : ElementEventInterface
+    @event_interface : ElementEventInterface | Nil
 
     # Workaround for the inability to use self in an initializer
     # https://github.com/crystal-lang/crystal/issues/4436
@@ -50,7 +51,6 @@ module Hydra
 
     def initialize(id : String)
       @id = id
-      @event_interface = uninitialized ElementEventInterface
       @visible = true
       @position = "0:0"
     end
@@ -79,6 +79,20 @@ module Hydra
     end
 
     def remove_last
+    end
+
+    def can_scroll_up?
+      false
+    end
+
+    def scroll(x : Int32)
+    end
+
+    def can_scroll_down?
+      false
+    end
+
+    def add_message(x : String)
     end
   end
 end

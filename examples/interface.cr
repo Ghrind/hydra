@@ -16,6 +16,12 @@ app.add_element({
   :visible => "false"
 })
 
+app.add_element({
+  :id => "logbox",
+  :type => "logbox",
+  :position => "40:0"
+})
+
 app.bind("prompt-1.submit", "application", "stop")
 
 app.bind("prompt-2.submit", "application") do |event_hub, _|
