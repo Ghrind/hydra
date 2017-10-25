@@ -24,6 +24,15 @@ module Hydra
       instance.event_interface = ApplicationEventInterface.new(instance)
       instance
     end
+
+    def self.setup() : Hydra::Application
+      event_hub = Hydra::EventHub.new
+      view = Hydra::View.new(x: 50, y: 100)
+      instance = build(view, event_hub)
+      event_hub.register("application", instance.event_interface)
+      instance
+    end
+
     def initialize(view : Hydra::View, event_hub : Hydra::EventHub)
       @view = view
       @event_interface = uninitialized ApplicationEventInterface
@@ -31,6 +40,7 @@ module Hydra
       @logger = Logger.new(File.open("./debug.log", "w"))
       @logger.level = Logger::DEBUG
     end
+
     def start
       @view.render
       @running = true
@@ -50,6 +60,19 @@ module Hydra
 
     def stop
       @running = false
+    end
+
+    def bind(event : String, target : String, behavior : String)
+      @event_hub.bind(event, target, behavior)
+    end
+
+    def bind(event : String, target : String,  &block : EventHub, Event -> Bool)
+      @event_hub.bind(event, target, &block)
+    end
+
+    def add_element(element : Element)
+      @view.add_element(element)
+      @event_hub.register(element.id, element.event_interface)
     end
   end
 end
