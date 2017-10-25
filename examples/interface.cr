@@ -25,26 +25,6 @@ eh.bind("keypress.c", "application") do |event_hub, _|
   end
 end
 
-eh.bind("keypress.*", "prompt-1") do |event_hub, event|
-  keypress = event.keypress
-  if event_hub.has_focus?("prompt-1") && keypress
-    if keypress.char != ""
-      event_hub.trigger("prompt-1", "append", { :char => keypress.char })
-      false
-    elsif keypress.name == "backspace"
-      event_hub.trigger("prompt-1", "remove_last")
-      false
-    elsif keypress.name == "enter"
-      event_hub.trigger("prompt-1", "submit")
-      false
-    else
-      true
-    end
-  else
-    true
-  end
-end
-
 # Pressing ctrl + a will close prompt-1
 eh.bind("keypress.ctrl-a", "application") do |event_hub, _|
   event_hub.trigger("prompt-1", "hide")

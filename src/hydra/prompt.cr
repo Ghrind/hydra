@@ -3,6 +3,7 @@ module Hydra
     def initialize(target : Prompt)
       @target = target
     end
+
     def trigger(behavior : String, payload = Hash(Symbol, String).new) : Array(String)
       if behavior == "submit"
         return ["#{@target.id}.submit"]
@@ -14,6 +15,28 @@ module Hydra
         return super
       end
       Array(String).new
+    end
+
+    def on_register(event_hub : Hydra::EventHub)
+      event_hub.bind("keypress.*", @target.id) do |eh, event|
+        keypress = event.keypress
+        if eh.has_focus?(@target.id) && keypress
+          if keypress.char != ""
+            eh.trigger(@target.id, "append", { :char => keypress.char })
+            false
+          elsif keypress.name == "backspace"
+            eh.trigger(@target.id, "remove_last")
+            false
+          elsif keypress.name == "enter"
+            eh.trigger(@target.id, "submit")
+            false
+          else
+            true
+          end
+        else
+          true
+        end
+      end
     end
   end
   class Prompt < Element

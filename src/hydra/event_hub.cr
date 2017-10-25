@@ -24,6 +24,7 @@ module Hydra
     def register(key : String, event_interface : EventInterface)
       raise "Id already registered" if @register[key]?
       @register[key] = event_interface
+      event_interface.on_register(self)
     end
 
     def focus(identifier : String)
