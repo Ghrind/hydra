@@ -45,7 +45,7 @@ module Hydra
         @event_hub.broadcast(event)
         @view.render
       end
-      Crt.done
+      @view.close
     end
 
     def stop

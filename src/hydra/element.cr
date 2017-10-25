@@ -20,6 +20,8 @@ module Hydra
 
     getter :id
     getter :visible
+    property :position
+    @position : String
     property :event_interface
     @event_interface : ElementEventInterface
 
@@ -35,6 +37,7 @@ module Hydra
       @id = id
       @event_interface = uninitialized ElementEventInterface
       @visible = true
+      @position = "0:0"
     end
 
     def content

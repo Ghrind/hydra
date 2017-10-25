@@ -2,12 +2,13 @@ require "crt"
 
 module Hydra
   class View
-    property :event_interface
-    @event_interface : EventInterface
     def initialize(x = 20, y = 60)
       @win = Crt::Window.new(x, y)
       @elements = Array(Element).new
-      @event_interface = EventInterface.new
+    end
+
+    def close
+      Crt.done
     end
 
     def getch()
@@ -31,8 +32,13 @@ module Hydra
     end
 
     def render_element(element : Element)
-      x = @win.row / 2 - element.height / 2
-      y = @win.col / 2 - element.width / 2
+      x, y = 0, 0
+      if element.position == "center"
+        x = @win.row / 2 - element.height / 2
+        y = @win.col / 2 - element.width / 2
+      else
+        x, y = element.position.split(":").map(&.to_i)
+      end
 
       i = 0
       element.content.each_line do |l|
