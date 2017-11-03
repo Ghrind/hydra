@@ -1,16 +1,13 @@
 module Hydra
   class PromptElementEventInterface < ElementEventInterface
-    def trigger(behavior : String, payload = Hash(Symbol, String).new) : Array(String)
-      if behavior == "submit"
-        return ["#{@target.id}.submit"]
-      elsif behavior == "append"
+    def trigger(behavior : String, payload = Hash(Symbol, String).new)
+      if behavior == "append"
         @target.append(payload[:char])
       elsif behavior == "remove_last"
         @target.remove_last
       else
-        return super
+        super
       end
-      Array(String).new
     end
 
     def on_register(event_hub : Hydra::EventHub)
@@ -22,9 +19,6 @@ module Hydra
             false
           elsif keypress.name == "backspace"
             eh.trigger(@target.id, "remove_last")
-            false
-          elsif keypress.name == "enter"
-            eh.trigger(@target.id, "submit")
             false
           else
             true

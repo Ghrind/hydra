@@ -71,10 +71,7 @@ module Hydra
 
     def trigger(target : String, behavior : String, params = Hash(Symbol, String).new)
       return Array(String).new unless @register[target]?
-      events = @register[target].trigger(behavior, params)
-      events.each do |event|
-        broadcast Event.new(event)
-      end
+      @register[target].trigger(behavior, params)
     end
   end
 end

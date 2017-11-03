@@ -1,6 +1,6 @@
 module Hydra
   class LogboxEventInterface < ElementEventInterface
-    def trigger(behavior : String, payload = Hash(Symbol, String).new) : Array(String)
+    def trigger(behavior : String, payload = Hash(Symbol, String).new)
       case behavior
       when "scroll_up"
         @target.scroll(1) if @target.can_scroll_up?
@@ -9,7 +9,6 @@ module Hydra
       when "add_message"
         @target.add_message payload["message"].to_s
       end
-      Array(String).new
     end
   end
   class Logbox < Element

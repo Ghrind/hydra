@@ -40,6 +40,17 @@ app.bind("keypress.c", "application") do |event_hub, _|
   end
 end
 
+app.bind("keypress.enter", "prompt-1") do |event_hub, event|
+  if event_hub.has_focus?("prompt-1")
+    event_hub.trigger("prompt-1", "hide")
+    event_hub.unfocus
+    event_hub.trigger("logbox", "add_message", { "message" => "coucou" })
+    false
+  else
+    true
+  end
+end
+
 app.bind("keypress.d", "application") do |event_hub, _|
   if event_hub.has_focus?("prompt-2")
     true

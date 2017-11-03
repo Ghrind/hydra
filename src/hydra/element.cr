@@ -4,13 +4,11 @@ module Hydra
     def initialize(target : Element)
       @target = target
     end
-    def trigger(behavior : String, payload = Hash(Symbol, String).new) : Array(String)
+    def trigger(behavior : String, payload = Hash(Symbol, String).new)
       if behavior == "show"
         @target.show
-        Array(String).new
       elsif behavior == "hide"
         @target.hide
-        Array(String).new
       else
         super
       end
