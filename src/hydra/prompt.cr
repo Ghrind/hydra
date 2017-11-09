@@ -46,11 +46,22 @@ module Hydra
     end
 
     def content
-      %("#{@value}")
+      box_content(@value)
+    end
+
+    private def box_content(content)
+      res = "┌" + "─" * (width - 2) + "┐\n"
+      res += "│" + content.ljust(width - 2) + "│\n"
+      res += "└" + "─" * (width - 2) + "┘"
+      res
     end
 
     def append(string : String)
       @value += string
+    end
+
+    def width
+      30
     end
 
     def remove_last

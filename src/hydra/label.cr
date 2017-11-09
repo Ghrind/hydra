@@ -17,8 +17,7 @@ module Hydra
       3
     end
 
-    # TODO: make private
-    def box_content(content)
+    private def box_content(content)
       res = "┌" + "─" * content.size + "┐\n"
       res += "│" + content + "│\n"
       res += "└" + "─" * content.size + "┘"
