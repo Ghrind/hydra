@@ -4,7 +4,6 @@ module Hydra
   class View
     def initialize(x = 20, y = 60)
       @win = Crt::Window.new(x, y)
-      @elements = Array(Element).new
     end
 
     def close
@@ -15,22 +14,12 @@ module Hydra
       @win.getch
     end
 
-    def render
+    def render(elements : ElementCollection)
       @win.clear
-      @elements.each do |el|
+      elements.each do |el|
         render_element(el) if el.visible
       end
       @win.refresh
-    end
-
-    def add_element(element)
-      @elements << element
-    end
-
-    def element(id : String) : Element
-      e = @elements.find { |e| e.id == id }
-      raise "Element not found #{id}" unless e
-      e
     end
 
     def render_element(element : Element)

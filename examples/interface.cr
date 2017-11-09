@@ -22,7 +22,7 @@ app.add_element({
   :position => "40:0"
 })
 
-app.bind("keypress.c", "application") do |event_hub, _|
+app.bind("keypress.c", "application") do |event_hub|
   if event_hub.has_focus?("prompt-1")
     true
   else
@@ -45,7 +45,7 @@ app.bind("keypress.enter", "prompt-1") do |event_hub, event|
   end
 end
 
-app.bind("keypress.d", "application") do |event_hub, _|
+app.bind("keypress.d", "application") do |event_hub|
   if event_hub.has_focus?("prompt-2")
     true
   else
@@ -56,7 +56,7 @@ app.bind("keypress.d", "application") do |event_hub, _|
 end
 
 # Pressing ctrl + a will close prompt-1
-app.bind("keypress.ctrl-a", "application") do |event_hub, _|
+app.bind("keypress.ctrl-a", "application") do |event_hub|
   event_hub.trigger("prompt-1", "hide")
   event_hub.unfocus
   true
@@ -66,7 +66,7 @@ end
 app.bind("keypress.q", "application", "stop")
 
 # Pressing s will quit in 2 seconds
-app.bind("keypress.s", "application") do |event_hub, _|
+app.bind("keypress.s", "application") do |event_hub|
   spawn do
     sleep 2
     event_hub.trigger("application", "stop")

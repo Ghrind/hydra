@@ -38,10 +38,11 @@ module Hydra
       @event_hub = event_hub
       @logger = Logger.new(File.open("./debug.log", "w"))
       @logger.level = Logger::DEBUG
+      @elements = ElementCollection.new
     end
 
     def start
-      @view.render
+      @view.render(@elements)
       @running = true
       while @running
         char = @view.getch
@@ -52,7 +53,7 @@ module Hydra
         event = Event.new("keypress.#{keypress.name}")
         event.keypress = keypress
         @event_hub.broadcast(event)
-        @view.render
+        @view.render(@elements)
       end
       @view.close
     end
@@ -70,7 +71,7 @@ module Hydra
     end
 
     def add_element(element : Element)
-      @view.add_element(element)
+      @elements.push(element)
       event_interface = element.event_interface
       return unless event_interface
       @event_hub.register(element.id, event_interface)
@@ -82,7 +83,7 @@ module Hydra
     end
 
     def element(id : String) : Element
-      @view.element(id)
+      @elements.by_id(id)
     end
 
   end
