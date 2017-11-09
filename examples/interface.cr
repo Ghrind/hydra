@@ -22,14 +22,6 @@ app.add_element({
   :position => "40:0"
 })
 
-app.bind("prompt-1.submit", "application", "stop")
-
-app.bind("prompt-2.submit", "application") do |event_hub, _|
-  event_hub.trigger("prompt-2", "hide")
-  event_hub.unfocus
-  false
-end
-
 app.bind("keypress.c", "application") do |event_hub, _|
   if event_hub.has_focus?("prompt-1")
     true
@@ -44,7 +36,9 @@ app.bind("keypress.enter", "prompt-1") do |event_hub, event|
   if event_hub.has_focus?("prompt-1")
     event_hub.trigger("prompt-1", "hide")
     event_hub.unfocus
-    event_hub.trigger("logbox", "add_message", { "message" => "coucou" })
+    element = app.element("prompt-1")
+    event_hub.trigger("logbox", "add_message", { "message" => element.value })
+    event_hub.trigger("prompt-1", "clear")
     false
   else
     true

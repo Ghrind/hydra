@@ -27,8 +27,10 @@ module Hydra
       @elements << element
     end
 
-    def element(name) : Element
-      @elements.find { |e| e.name == name }
+    def element(id : String) : Element
+      e = @elements.find { |e| e.id == id }
+      raise "Element not found #{id}" unless e
+      e
     end
 
     def render_element(element : Element)

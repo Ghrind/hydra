@@ -5,6 +5,8 @@ module Hydra
         @target.append(payload[:char])
       elsif behavior == "remove_last"
         @target.remove_last
+      elsif behavior == "clear"
+        @target.clear
       else
         super
       end
@@ -54,6 +56,14 @@ module Hydra
     def remove_last
       return if @value.size == 0
       @value = @value[0..-2]
+    end
+
+    def value
+      @value
+    end
+
+    def clear
+      @value = ""
     end
   end
 end

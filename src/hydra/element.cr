@@ -92,5 +92,12 @@ module Hydra
 
     def add_message(x : String)
     end
+
+    def value
+      ""
+    end
+
+    def clear
+    end
   end
 end

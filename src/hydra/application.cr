@@ -81,5 +81,9 @@ module Hydra
       add_element(element)
     end
 
+    def element(id : String) : Element
+      @view.element(id)
+    end
+
   end
 end
