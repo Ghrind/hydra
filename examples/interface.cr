@@ -13,7 +13,8 @@ app.add_element({
   :id => "prompt-1",
   :type => "prompt",
   :position => "5:20",
-  :visible => "false"
+  :visible => "false",
+  :label => "Player name"
 })
 
 app.add_element({

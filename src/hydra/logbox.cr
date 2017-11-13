@@ -17,7 +17,7 @@ module Hydra
 
     # Workaround for the inability to use self in an initializer
     # https://github.com/crystal-lang/crystal/issues/4436
-    def self.build(id : String)
+    def self.build(id : String, options = Hash(Symbol, String).new)
       instance = new(id)
       instance.event_interface = LogboxEventInterface.new(instance)
       instance

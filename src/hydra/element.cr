@@ -1,19 +1,6 @@
-require "./event_interface"
+require "./element_event_interface"
+
 module Hydra
-  class ElementEventInterface < EventInterface
-    def initialize(target : Element)
-      @target = target
-    end
-    def trigger(behavior : String, payload = Hash(Symbol, String).new)
-      if behavior == "show"
-        @target.show
-      elsif behavior == "hide"
-        @target.hide
-      else
-        super
-      end
-    end
-  end
   class Element
 
     KLASSES = {
@@ -30,31 +17,32 @@ module Hydra
 
     # Workaround for the inability to use self in an initializer
     # https://github.com/crystal-lang/crystal/issues/4436
-    def self.build(id : String)
+    def self.build(id : String, options = Hash(Symbol, String).new)
       instance = new(id)
       instance.event_interface = ElementEventInterface.new(instance)
       instance
     end
 
     def self.build(specs : Hash(Symbol, String)) : Element
-      raise "Element is missing an id: #{specs}" unless specs[:id]?
-      id = specs[:id]
-      raise "Element is missing a type: #{specs}" unless specs[:type]?
-      klass = KLASSES[specs[:type]]
-      element = klass.build(id)
+      id = specs.delete(:id)
+      raise "Element is missing an id: #{specs}" unless id
+      type = specs.delete(:type)
+      raise "Element is missing a type: #{specs}" unless type
+      klass = KLASSES[type]
+      element = klass.build(id, specs)
       element.position = specs[:position] if specs[:position]?
       element.hide if specs[:visible]? && specs[:visible] == "false"
       element
     end
 
-    def initialize(id : String)
+    def initialize(id : String, options = Hash(Symbol, String).new)
       @id = id
       @visible = true
       @position = "0:0"
     end
 
     def content
-      "Content undefined for #{self.class.name}"
+      "Content for #{self.class.name} is undefined"
     end
 
     def width

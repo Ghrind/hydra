@@ -1,47 +1,20 @@
-module Hydra
-  class PromptElementEventInterface < ElementEventInterface
-    def trigger(behavior : String, payload = Hash(Symbol, String).new)
-      if behavior == "append"
-        @target.append(payload[:char])
-      elsif behavior == "remove_last"
-        @target.remove_last
-      elsif behavior == "clear"
-        @target.clear
-      else
-        super
-      end
-    end
+require "./element"
+require "./prompt_element_event_interface"
 
-    def on_register(event_hub : Hydra::EventHub)
-      event_hub.bind("keypress.*", @target.id) do |eh, event|
-        keypress = event.keypress
-        if eh.has_focus?(@target.id) && keypress
-          if keypress.char != ""
-            eh.trigger(@target.id, "append", { :char => keypress.char })
-            false
-          elsif keypress.name == "backspace"
-            eh.trigger(@target.id, "remove_last")
-            false
-          else
-            true
-          end
-        else
-          true
-        end
-      end
-    end
-  end
+module Hydra
   class Prompt < Element
+    @label : String
     # Workaround for the inability to use self in an initializer
     # https://github.com/crystal-lang/crystal/issues/4436
-    def self.build(id : String)
-      instance = new(id)
+    def self.build(id : String, options = Hash(Symbol, String).new)
+      instance = new(id, options)
       instance.event_interface = PromptElementEventInterface.new(instance)
       instance
     end
 
-    def initialize(id : String)
-      super
+    def initialize(id : String, options = Hash(Symbol, String).new)
+      super(id)
+      @label = options[:label]? ? options[:label] : ""
       @value = ""
     end
 
@@ -50,7 +23,11 @@ module Hydra
     end
 
     private def box_content(content)
-      res = "┌" + "─" * (width - 2) + "┐\n"
+      if content.size > (width - 2)
+        content = "…" + content[-(width - 3)..-1]
+      end
+      top_bar = "─" + @label.ljust(width - 3, '─')
+      res = "┌" + top_bar + "┐\n"
       res += "│" + content.ljust(width - 2) + "│\n"
       res += "└" + "─" * (width - 2) + "┘"
       res
@@ -62,6 +39,10 @@ module Hydra
 
     def width
       30
+    end
+
+    def height
+      3
     end
 
     def remove_last

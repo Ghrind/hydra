@@ -1,6 +1,6 @@
 module Hydra
   class Label < Element
-    def initialize(id : String)
+    def initialize(id : String, options = Hash(Symbol, String).new)
       super
       @text = ""
     end

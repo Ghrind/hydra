@@ -70,7 +70,7 @@ module Hydra
     end
 
     def trigger(target : String, behavior : String, params = Hash(Symbol, String).new)
-      return Array(String).new unless @register[target]?
+      return unless @register[target]?
       @register[target].trigger(behavior, params)
     end
   end
