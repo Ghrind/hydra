@@ -1,39 +1,60 @@
-require "crt"
+require "./view_crt_interface"
+require "./view_test_interface"
+require "./element"
+require "./element_collection"
 
 module Hydra
   class View
+    @interface : ViewInterface
+
     def initialize(x = 20, y = 60)
-      @win = Crt::Window.new(x, y)
+      @x = x
+      @y = y
+      @interface = ViewCrtInterface.new(x, y)
+    end
+
+    def initialize(interface_type : typeof(Hydra::ViewInterface), x = 20, y = 60)
+      @x = x
+      @y = y
+      @interface = interface_type.new(x, y)
     end
 
     def close
-      Crt.done
+      @interface.close
     end
 
-    def getch()
-      @win.getch
+    def closed?
+      @interface.closed?
+    end
+
+    def getch
+      @interface.getch
+    end
+
+    def dump
+      @interface.dump
     end
 
     def render(elements : ElementCollection)
-      @win.clear
+      @interface.clear
       elements.each do |el|
         render_element(el) if el.visible
       end
-      @win.refresh
+      @interface.commit
     end
 
     def render_element(element : Element)
       x, y = 0, 0
       if element.position == "center"
-        x = @win.row / 2 - element.height / 2
-        y = @win.col / 2 - element.width / 2
+        x = (@x.to_f / 2 - element.height.to_f / 2).floor.to_i
+        y = (@y.to_f / 2 - element.width.to_f / 2).floor.to_i
       else
         x, y = element.position.split(":").map(&.to_i)
       end
 
       i = 0
       element.content.each_line do |l|
-        @win.print(x + i, y, l)
+        @interface.print(x + i, y, l)
         i += 1
       end
     end
