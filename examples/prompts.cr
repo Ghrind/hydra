@@ -27,7 +27,7 @@ app.add_element({
 
 app.add_element({
   :id => "",
-  :type => "label",
+  :type => "text",
   :value => "Press c to show Prompt 1\nPress d to show Prompt 2\nPress ctrl-x to hide prompts\nPress q to quit",
   :label => "Commands"
 })

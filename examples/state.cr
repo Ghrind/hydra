@@ -12,7 +12,7 @@ app.add_element({
 
 app.add_element({
   :id => "",
-  :type => "label",
+  :type => "text",
   :position => "7:0",
   :template => "{{player.name}}",
   :label => "User name"
@@ -20,7 +20,7 @@ app.add_element({
 
 app.add_element({
   :id => "commands",
-  :type => "label",
+  :type => "text",
   :value => "Press c to show Prompt\nPress ctrl-x to hide prompt\nPress q to quit",
   :label => "Commands"
 })

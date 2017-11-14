@@ -4,7 +4,7 @@ app = Hydra::Application.setup
 
 app.add_element({
   :id => "commands",
-  :type => "label",
+  :type => "text",
   :value => "Press q to quit immediately\nPress s to quit in 2 seconds",
   :label => "Commands"
 })

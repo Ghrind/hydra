@@ -1,7 +1,7 @@
 require "./element"
 
 module Hydra
-  class Label < Element
+  class Text < Element
     def initialize(id : String, options = Hash(Symbol, String).new)
       super
     end

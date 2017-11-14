@@ -6,7 +6,7 @@ module Hydra
     KLASSES = {
       "prompt" => Hydra::Prompt,
       "logbox" => Hydra::Logbox,
-      "label"  => Hydra::Label
+      "text"  => Hydra::Text
     }
 
     getter :id
