@@ -15,7 +15,6 @@ module Hydra
     def initialize(id : String, options = Hash(Symbol, String).new)
       super(id)
       @label = options[:label]? ? options[:label] : ""
-      @value = ""
     end
 
     def content

@@ -35,9 +35,15 @@ module Hydra
       @interface.dump
     end
 
-    def render(elements : ElementCollection)
+    def render(elements : Array(Element), state = Hash(String, String).new)
       @interface.clear
       elements.each do |el|
+        if el.template != ""
+          el.value = el.template
+          state.each do |key, value|
+            el.value = el.value.sub("{{#{key}}}", value)
+          end
+        end
         render_element(el) if el.visible
       end
       @interface.commit

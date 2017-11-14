@@ -5,7 +5,8 @@ module Hydra
 
     KLASSES = {
       "prompt" => Hydra::Prompt,
-      "logbox" => Hydra::Logbox
+      "logbox" => Hydra::Logbox,
+      "label"  => Hydra::Label
     }
 
     getter :id
@@ -14,11 +15,12 @@ module Hydra
     @position : String
     property :event_interface
     @event_interface : ElementEventInterface | Nil
+    property :template, :value
 
     # Workaround for the inability to use self in an initializer
     # https://github.com/crystal-lang/crystal/issues/4436
     def self.build(id : String, options = Hash(Symbol, String).new)
-      instance = new(id)
+      instance = new(id, options)
       instance.event_interface = ElementEventInterface.new(instance)
       instance
     end
@@ -39,6 +41,8 @@ module Hydra
       @id = id
       @visible = true
       @position = "0:0"
+      @value = options[:value]? ? options[:value] : ""
+      @template = options[:template]? ? options[:template] : ""
     end
 
     def content
@@ -79,10 +83,6 @@ module Hydra
     end
 
     def add_message(x : String)
-    end
-
-    def value
-      ""
     end
 
     def clear

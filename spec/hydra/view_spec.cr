@@ -2,14 +2,21 @@ require "spec"
 require "../src/hydra/view"
 
 class TestElement < Hydra::Element
-  property :position, :width, :height, :content
+  property :position
   def initialize
-    @id = ""
-    @visible = true
-    @position = "0:0"
-    @width = 0
-    @height = 0
-    @content = ""
+    super("")
+  end
+
+  def content
+    @value
+  end
+
+  def height
+    @value.split("\n").size
+  end
+
+  def width
+    @value.split("\n")[0].size
   end
 end
 
@@ -36,7 +43,7 @@ describe "View" do
 
       element = TestElement.new
       element.position = "2:1"
-      element.content = "abc\ndef\nghi"
+      element.value = "abc\ndef\nghi"
 
       view.render_element(element)
       view.dump.should eq ["          ",
@@ -51,16 +58,49 @@ describe "View" do
         view = Hydra::View.new(Hydra::ViewTestInterface, 5, 10)
 
         element = TestElement.new
-        element.width = 3
-        element.height = 3
         element.position = "center"
-        element.content = "abc\ndef\nghi"
+        element.value = "abc\ndef\nghi"
 
         view.render_element(element)
         view.dump.should eq ["          ",
                              "   abc    ",
                              "   def    ",
                              "   ghi    ",
+                             "          "].join("\n")
+      end
+    end
+
+  end
+  describe "#render" do
+    context "when the element has a template" do
+      it "renders the content of the template" do
+        view = Hydra::View.new(Hydra::ViewTestInterface, 5, 10)
+
+        element = TestElement.new
+        element.position = "center"
+        element.value = "foobar" # In a real case scenario, value should be be initialized if a template is given
+        element.template = "{{a}}"
+
+        view.render([element])
+        view.dump.should eq ["          ",
+                             "          ",
+                             "  {{a}}   ",
+                             "          ",
+                             "          "].join("\n")
+      end
+
+      it "replaces the bindings with values from the state" do
+        view = Hydra::View.new(Hydra::ViewTestInterface, 5, 10)
+
+        element = TestElement.new
+        element.position = "center"
+        element.template = "{{a}}"
+
+        view.render([element], { "a" => "1234567890"})
+        view.dump.should eq ["          ",
+                             "          ",
+                             "1234567890",
+                             "          ",
                              "          "].join("\n")
       end
     end

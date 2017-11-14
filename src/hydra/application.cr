@@ -13,7 +13,7 @@ module Hydra
     end
   end
   class Application
-    property :event_interface
+    property :event_interface, :state
     @event_interface : ApplicationEventInterface
 
     # Workaround for the inability to use self in an initializer
@@ -39,10 +39,11 @@ module Hydra
       @logger = Logger.new(File.open("./debug.log", "w"))
       @logger.level = Logger::DEBUG
       @elements = ElementCollection.new
+      @state = Hash(String, String).new
     end
 
     def start
-      @view.render(@elements)
+      @view.render(@elements.to_a, @state)
       @running = true
       while @running
         char = @view.getch
@@ -53,7 +54,7 @@ module Hydra
         event = Event.new("keypress.#{keypress.name}")
         event.keypress = keypress
         @event_hub.broadcast(event)
-        @view.render(@elements)
+        @view.render(@elements.to_a, @state)
       end
       @view.close
     end

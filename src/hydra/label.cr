@@ -2,15 +2,14 @@ module Hydra
   class Label < Element
     def initialize(id : String, options = Hash(Symbol, String).new)
       super
-      @text = ""
     end
 
     def content
-      box_content(@text)
+      box_content(@value)
     end
 
     def width
-      @text.size + 2
+      @value.size + 2
     end
 
     def height
