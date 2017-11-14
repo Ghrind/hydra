@@ -70,7 +70,7 @@ module Hydra
     end
 
     def add_box(content)
-      res = "┌" + "─" * (@width - 2) + (can_scroll_up? ? "↑" : "┐") + "\n"
+      res = "┌" + "─" + @label.ljust(@width - 3, '─') + (can_scroll_up? ? "↑" : "┐") + "\n"
       content.each do |item|
         res += "│" + item.ljust(@width - 2) + "│\n"
       end

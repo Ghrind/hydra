@@ -43,6 +43,7 @@ module Hydra
       @position = "0:0"
       @value = options[:value]? ? options[:value] : ""
       @template = options[:template]? ? options[:template] : ""
+      @label = options[:label]? ? options[:label] : ""
     end
 
     def content

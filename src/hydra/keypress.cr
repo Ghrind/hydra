@@ -2,9 +2,12 @@ module Hydra
   class Keypress
     MAPPING = {
       1 => "ctrl-a",
+      3 => "ctrl-c",
       5 => "ctrl-e",
       13 => "enter",
-      127 => "backspace"
+      24 => "ctrl-x",
+      127 => "backspace",
+      27 => "escape"
     }
 
     getter :name

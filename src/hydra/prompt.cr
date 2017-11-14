@@ -3,18 +3,12 @@ require "./prompt_element_event_interface"
 
 module Hydra
   class Prompt < Element
-    @label : String
     # Workaround for the inability to use self in an initializer
     # https://github.com/crystal-lang/crystal/issues/4436
     def self.build(id : String, options = Hash(Symbol, String).new)
       instance = new(id, options)
       instance.event_interface = PromptElementEventInterface.new(instance)
       instance
-    end
-
-    def initialize(id : String, options = Hash(Symbol, String).new)
-      super(id)
-      @label = options[:label]? ? options[:label] : ""
     end
 
     def content

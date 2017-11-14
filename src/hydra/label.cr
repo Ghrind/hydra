@@ -20,7 +20,7 @@ module Hydra
 
     private def box_content(content)
       x = width
-      res = "┌" + "─" * (x - 2) + "┐\n"
+      res = "┌" + "─" + @label.ljust(x - 3, '─') + "┐\n"
       content.split("\n").each do |row|
         res += "│" + row.ljust(x - 2, ' ') + "│\n"
       end
