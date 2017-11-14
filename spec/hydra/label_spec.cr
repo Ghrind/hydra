@@ -30,5 +30,16 @@ describe "Label" do
                                "│bar│",
                                "└───┘"].join("\n")
     end
+    context "when the label is longer than the content" do
+      it "expends the box accordingly" do
+        label = Hydra::Label.new("", { :label => "foobar" })
+        label.value = "fo\nbar"
+
+        label.content.should eq ["┌─foobar─┐",
+                                 "│fo      │",
+                                 "│bar     │",
+                                 "└────────┘"].join("\n")
+      end
+    end
   end
 end

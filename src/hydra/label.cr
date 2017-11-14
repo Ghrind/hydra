@@ -11,7 +11,7 @@ module Hydra
     end
 
     def width
-      @value.split("\n").map { |s| s.size }.max + 2
+      (@value.split("\n") + [@label + "**"]).map { |s| s.size }.max + 2
     end
 
     def height
