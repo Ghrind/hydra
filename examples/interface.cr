@@ -26,7 +26,7 @@ app.add_element({
 app.add_element({
   :id => "",
   :type => "label",
-  :template => "Player name: {{player.name}}"
+  :template => "Player name:\n{{player.name}}"
 })
 
 app.state["player.name"] = "Algor"

@@ -1,3 +1,5 @@
+require "./element"
+
 module Hydra
   class Label < Element
     def initialize(id : String, options = Hash(Symbol, String).new)
@@ -9,17 +11,20 @@ module Hydra
     end
 
     def width
-      @value.size + 2
+      @value.split("\n").map { |s| s.size }.max + 2
     end
 
     def height
-      3
+      @value.split("\n").size + 2
     end
 
     private def box_content(content)
-      res = "┌" + "─" * content.size + "┐\n"
-      res += "│" + content + "│\n"
-      res += "└" + "─" * content.size + "┘"
+      x = width
+      res = "┌" + "─" * (x - 2) + "┐\n"
+      content.split("\n").each do |row|
+        res += "│" + row.ljust(x - 2, ' ') + "│\n"
+      end
+      res += "└" + "─" * (x - 2) + "┘"
       res
     end
   end
