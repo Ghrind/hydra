@@ -19,8 +19,8 @@ module Hydra
     end
 
     def [](x : Int32, y : Int32) : String | Nil
-      return "" unless @map[x]?
-      return "" unless @map[x][y]?
+      return nil unless @map[x]?
+      return nil unless @map[x][y]?
       @map[x][y]
     end
 
