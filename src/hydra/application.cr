@@ -1,4 +1,5 @@
 require "./event_interface"
+require "./screen"
 module Hydra
   class ApplicationEventInterface < EventInterface
     def initialize(target : Application)
@@ -33,7 +34,9 @@ module Hydra
     end
 
     def initialize(view : Hydra::View, event_hub : Hydra::EventHub)
+      @screen = Screen.new(view.x, view.y)
       @view = view
+      @view.filters << BorderFilter
       @event_interface = uninitialized ApplicationEventInterface
       @event_hub = event_hub
       @logger = Logger.new(File.open("./debug.log", "w"))
@@ -44,9 +47,10 @@ module Hydra
 
     def start
       @view.render(@elements.to_a, @state)
+      @screen.update(@view.dump.gsub("\n", ""))
       @running = true
       while @running
-        char = @view.getch
+        char = @screen.getch
         sleep 0.01
         next unless char >= 0
         @logger.debug "#{char}: #{char.chr}"
@@ -55,8 +59,9 @@ module Hydra
         event.keypress = keypress
         @event_hub.broadcast(event)
         @view.render(@elements.to_a, @state)
+        @screen.update(@view.dump.gsub("\n", ""))
       end
-      @view.close
+      @screen.close
     end
 
     def stop

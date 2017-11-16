@@ -1,23 +1,15 @@
 require "crt"
-require "./view_interface"
 
 module Hydra
-  class ViewCrtInterface < ViewInterface
+  class Screen
     def initialize(x : Int32, y : Int32)
       @win = Crt::Window.new(x, y)
-      super
     end
 
-    def print(x : Int32, y : Int32, text : String)
-      @win.print(x, y, text)
-    end
-
-    def commit
-      @win.refresh
-    end
-
-    def clear
+    def update(content : String)
       @win.clear
+      @win.print(0, 0, content)
+      @win.refresh
     end
 
     def getch

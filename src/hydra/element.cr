@@ -66,6 +66,11 @@ module Hydra
       @visible = false
     end
 
+    def move(x : Int32, y : Int32)
+      x1, y1 = @position.split(":").map(&.to_i)
+      @position = "#{x1 + x}:#{y1 + y}"
+    end
+
     def append(string : String)
     end
 

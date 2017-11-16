@@ -1,42 +1,37 @@
-require "./view_crt_interface"
-require "./view_test_interface"
+require "./grid"
 require "./element"
-require "./element_collection"
+require "./filter"
+require "./border_filter"
 
 module Hydra
   class View
-    @interface : ViewInterface
-
+    property :filters
+    getter :x, :y
     def initialize(x = 20, y = 60)
       @x = x
       @y = y
-      @interface = ViewCrtInterface.new(x, y)
-    end
-
-    def initialize(interface_type : typeof(Hydra::ViewInterface), x = 20, y = 60)
-      @x = x
-      @y = y
-      @interface = interface_type.new(x, y)
-    end
-
-    def close
-      @interface.close
-    end
-
-    def closed?
-      @interface.closed?
-    end
-
-    def getch
-      @interface.getch
+      @grid = Grid.new(x, y)
+      @filters = Array(Filter.class).new
     end
 
     def dump
-      @interface.dump
+      @filters.reduce(@grid) do |memo, filter|
+        filter.apply(memo)
+      end.dump
+    end
+
+    def clear
+      @grid = Grid.new(@x, @y)
+    end
+
+    def print(x : Int, y : Int, text : String)
+      text.split("").each_with_index do |char, i|
+        @grid[x, y + i] = char
+      end
     end
 
     def render(elements : Array(Element), state = Hash(String, String).new)
-      @interface.clear
+      clear
       elements.each do |el|
         if el.template != ""
           el.value = el.template
@@ -46,7 +41,6 @@ module Hydra
         end
         render_element(el) if el.visible
       end
-      @interface.commit
     end
 
     def render_element(element : Element)
@@ -60,7 +54,7 @@ module Hydra
 
       i = 0
       element.content.each_line do |l|
-        @interface.print(x + i, y, l)
+        print(x + i, y, l)
         i += 1
       end
     end
