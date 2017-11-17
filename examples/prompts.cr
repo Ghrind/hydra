@@ -99,4 +99,4 @@ end
 # Pressing q will quit
 app.bind("keypress.q", "application", "stop")
 
-app.start
+app.run

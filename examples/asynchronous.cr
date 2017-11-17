@@ -21,4 +21,4 @@ app.bind("keypress.s", "application") do |event_hub|
   true
 end
 
-app.start
+app.run

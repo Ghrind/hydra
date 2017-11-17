@@ -1,5 +1,11 @@
+require "./element_collection"
+require "./event"
+require "./event_hub"
 require "./event_interface"
+require "logger"
 require "./screen"
+require "./view"
+
 module Hydra
   class ApplicationEventInterface < EventInterface
     def initialize(target : Application)
@@ -17,55 +23,84 @@ module Hydra
     property :event_interface, :state
     @event_interface : ApplicationEventInterface
 
+    # Creates a new application with injected dependencies and sensible defaults
+    def self.setup(event_hub : EventHub | Nil = nil,
+                   view : View | Nil  = nil,
+                   logger : Logger | Nil = nil,
+                   screen : Screen | Nil = nil,
+                   elements : ElementCollection | Nil = nil,
+                   state : Hash(String, String) | Nil = nil) : Hydra::Application
+
+      event_hub = Hydra::EventHub.new unless event_hub
+
+      unless view
+        view = Hydra::View.new(x: 50, y: 100)
+        view.filters << BorderFilter
+      end
+
+      unless logger
+        logger = Logger.new(File.open("./debug.log", "w"))
+        logger.level = Logger::DEBUG
+      end
+
+      screen = Screen.new(view.x, view.y) unless screen
+
+      elements = ElementCollection.new unless elements
+
+      state = Hash(String, String).new unless state
+
+      instance = build(view: view, event_hub: event_hub, logger: logger, screen: screen, state: state, elements: elements)
+      event_hub.register("application", instance.event_interface)
+
+      instance
+    end
+
     # Workaround for the inability to use self in an initializer
     # https://github.com/crystal-lang/crystal/issues/4436
-    def self.build(view : Hydra::View, event_hub : Hydra::EventHub)
-      instance = new(view, event_hub)
+    def self.build(**params)
+      instance = new(**params)
       instance.event_interface = ApplicationEventInterface.new(instance)
       instance
     end
 
-    def self.setup() : Hydra::Application
-      event_hub = Hydra::EventHub.new
-      view = Hydra::View.new(x: 50, y: 100)
-      instance = build(view, event_hub)
-      event_hub.register("application", instance.event_interface)
-      instance
-    end
-
-    def initialize(view : Hydra::View, event_hub : Hydra::EventHub)
-      @screen = Screen.new(view.x, view.y)
+    private def initialize(view : Hydra::View, event_hub : Hydra::EventHub, logger : Logger, screen  : Screen, elements : ElementCollection, state : Hash(String, String))
+      @screen = screen
       @view = view
-      @view.filters << BorderFilter
+      @logger = logger
       @event_interface = uninitialized ApplicationEventInterface
       @event_hub = event_hub
-      @logger = Logger.new(File.open("./debug.log", "w"))
-      @logger.level = Logger::DEBUG
-      @elements = ElementCollection.new
-      @state = Hash(String, String).new
+      @elements = elements
+      @state = state
     end
 
-    def start
-      @view.render(@elements.to_a, @state)
-      @screen.update(@view.dump.gsub("\n", ""))
+    def run
+      update_screen
       @running = true
       while @running
-        char = @screen.getch
         sleep 0.01
-        next unless char >= 0
-        @logger.debug "#{char}: #{char.chr}"
-        keypress = Keypress.new(char)
-        event = Event.new("keypress.#{keypress.name}")
-        event.keypress = keypress
-        @event_hub.broadcast(event)
-        @view.render(@elements.to_a, @state)
-        @screen.update(@view.dump.gsub("\n", ""))
+        handle_keypress @screen.getch
       end
+      teardown
+    end
+
+    private def handle_keypress(char : Int32)
+      return unless char >= 0
+      event = Event.new_from_keypress_char(char)
+      @event_hub.broadcast(event)
+      update_screen
+    end
+
+    private def teardown
       @screen.close
     end
 
     def stop
       @running = false
+    end
+
+    private def update_screen
+      @view.render(@elements.to_a, @state)
+      @screen.update(@view.dump.gsub("\n", ""))
     end
 
     def bind(event : String, target : String, behavior : String)

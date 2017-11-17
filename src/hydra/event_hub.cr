@@ -1,3 +1,5 @@
+require "./binding"
+
 module Hydra
   class EventHub
     # Unused for now
