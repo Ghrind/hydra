@@ -17,26 +17,26 @@ app.add_element({
   :value => "         \n Move me \n         "
 })
 
-app.bind("keypress.h", "application") do
-  element = app.element("text_1")
+app.bind("keypress.h", "application") do |_, _, elements|
+  element = elements.by_id("text_1")
   element.move(0, -1)
   true
 end
 
-app.bind("keypress.j", "application") do
-  element = app.element("text_1")
+app.bind("keypress.j", "application") do |_, _, elements|
+  element = elements.by_id("text_1")
   element.move(1, 0)
   true
 end
 
-app.bind("keypress.k", "application") do
-  element = app.element("text_1")
+app.bind("keypress.k", "application") do |_, _, elements|
+  element = elements.by_id("text_1")
   element.move(-1, 0)
   true
 end
 
-app.bind("keypress.l", "application") do
-  element = app.element("text_1")
+app.bind("keypress.l", "application") do |_, _, elements|
+  element = elements.by_id("text_1")
   element.move(0, 1)
   true
 end

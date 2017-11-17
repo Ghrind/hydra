@@ -5,6 +5,7 @@ require "./event_interface"
 require "logger"
 require "./screen"
 require "./view"
+require "./state"
 
 module Hydra
   class ApplicationEventInterface < EventInterface
@@ -20,7 +21,7 @@ module Hydra
     end
   end
   class Application
-    property :event_interface, :state
+    property :event_interface
     @event_interface : ApplicationEventInterface
 
     # Creates a new application with injected dependencies and sensible defaults
@@ -29,7 +30,7 @@ module Hydra
                    logger : Logger | Nil = nil,
                    screen : Screen | Nil = nil,
                    elements : ElementCollection | Nil = nil,
-                   state : Hash(String, String) | Nil = nil) : Hydra::Application
+                   state : State | Nil = nil) : Hydra::Application
 
       event_hub = Hydra::EventHub.new unless event_hub
 
@@ -47,7 +48,7 @@ module Hydra
 
       elements = ElementCollection.new unless elements
 
-      state = Hash(String, String).new unless state
+      state = State.new unless state
 
       instance = build(view: view, event_hub: event_hub, logger: logger, screen: screen, state: state, elements: elements)
       event_hub.register("application", instance.event_interface)
@@ -63,7 +64,7 @@ module Hydra
       instance
     end
 
-    private def initialize(view : Hydra::View, event_hub : Hydra::EventHub, logger : Logger, screen  : Screen, elements : ElementCollection, state : Hash(String, String))
+    private def initialize(view : Hydra::View, event_hub : Hydra::EventHub, logger : Logger, screen  : Screen, elements : ElementCollection, state : State)
       @screen = screen
       @view = view
       @logger = logger
@@ -74,8 +75,9 @@ module Hydra
     end
 
     def run
-      update_screen
       @running = true
+      @event_hub.broadcast(Event.new("ready"), @state, @elements)
+      update_screen
       while @running
         sleep 0.01
         handle_keypress @screen.getch
@@ -86,7 +88,7 @@ module Hydra
     private def handle_keypress(char : Int32)
       return unless char >= 0
       event = Event.new_from_keypress_char(char)
-      @event_hub.broadcast(event)
+      @event_hub.broadcast(event, @state, @elements)
       update_screen
     end
 
@@ -107,7 +109,7 @@ module Hydra
       @event_hub.bind(event, target, behavior)
     end
 
-    def bind(event : String, target : String,  &block : EventHub, Event -> Bool)
+    def bind(event : String, target : String,  &block : EventHub, Event, ElementCollection, State -> Bool)
       @event_hub.bind(event, target, &block)
     end
 
@@ -121,10 +123,6 @@ module Hydra
     def add_element(specs : Hash(Symbol, String))
       element = Element.build(specs)
       add_element(element)
-    end
-
-    def element(id : String) : Element
-      @elements.by_id(id)
     end
 
   end

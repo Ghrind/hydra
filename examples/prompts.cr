@@ -44,11 +44,11 @@ app.bind("keypress.c", "application") do |event_hub|
   end
 end
 
-app.bind("keypress.enter", "prompt-1") do |event_hub, event|
+app.bind("keypress.enter", "prompt-1") do |event_hub, event, elements|
   if event_hub.has_focus?("prompt-1")
     event_hub.trigger("prompt-1", "hide")
     event_hub.unfocus
-    element = app.element("prompt-1")
+    element = elements.by_id("prompt-1")
     event_hub.trigger("logbox", "add_message", { "message" => "Prompt 1: '#{element.value}'" })
     event_hub.trigger("prompt-1", "clear")
     false
@@ -71,11 +71,11 @@ app.bind("keypress.d", "application") do |event_hub|
   end
 end
 
-app.bind("keypress.enter", "prompt-2") do |event_hub, event|
+app.bind("keypress.enter", "prompt-2") do |event_hub, event, elements|
   if event_hub.has_focus?("prompt-2")
     event_hub.trigger("prompt-2", "hide")
     event_hub.unfocus
-    element = app.element("prompt-2")
+    element = elements.by_id("prompt-2")
     event_hub.trigger("logbox", "add_message", { "message" => "Prompt 2: '#{element.value}'" })
     event_hub.trigger("prompt-2", "clear")
     false

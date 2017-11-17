@@ -2,15 +2,6 @@ require "./binding"
 
 module Hydra
   class EventHub
-    # Unused for now
-    #CHARS_TO_EVENTS = {
-    #  338 => "keypress.page_down",
-    #  339 => "keypress.page_up",
-    #  99  => "keypress.c",
-    #  113 => "keypress.q",
-    #  115 => "keypress.s",
-    #  13  => "keypress.enter"
-    #}
 
     def self.char_to_event(char : Int32) String
       return "keypress.##{char}" unless CHARS_TO_EVENTS.has_key?(char)
@@ -46,12 +37,12 @@ module Hydra
       @bindings[event] << Binding.new(target, behavior)
     end
 
-    def bind(event : String, target : String,  &block : EventHub, Event -> Bool)
+    def bind(event : String, target : String,  &block : EventHub, Event, ElementCollection, State -> Bool)
       @bindings[event] = Array(Binding).new unless @bindings.has_key?(event)
       @bindings[event] << Binding.new(target, block)
     end
 
-    def broadcast(event : Event)
+    def broadcast(event : Event, state : State, elements : ElementCollection)
       # TODO: Ugly
       parts = event.name.split(".")
       parts.pop
@@ -64,7 +55,7 @@ module Hydra
 
       bindings.sort { |a, b| (a.target == @focus ? 0 : 1) <=> (b.target == @focus ? 0 : 1)}.each do |binding|
         if binding.behavior == ""
-          return unless binding.proc.call(self, event)
+          return unless binding.proc.call(self, event, elements, state)
         else
           trigger(binding.target, binding.behavior, binding.params.merge({:event => event.name}))
         end

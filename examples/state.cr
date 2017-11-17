@@ -25,7 +25,10 @@ app.add_element({
   :label => "Commands"
 })
 
-app.state["player.name"] = "John Doe"
+app.bind("ready", "application") do |_, _, _, state|
+  state["player.name"] = "John Doe"
+  true
+end
 
 app.bind("keypress.c", "application") do |event_hub|
   if event_hub.has_focus?("prompt-1")
@@ -37,12 +40,12 @@ app.bind("keypress.c", "application") do |event_hub|
   end
 end
 
-app.bind("keypress.enter", "prompt-1") do |event_hub, event|
+app.bind("keypress.enter", "prompt-1") do |event_hub, event, elements, state|
   if event_hub.has_focus?("prompt-1")
     event_hub.trigger("prompt-1", "hide")
     event_hub.unfocus
-    element = app.element("prompt-1")
-    app.state["player.name"] = element.value
+    element = elements.by_id("prompt-1")
+    state["player.name"] = element.value
     event_hub.trigger("prompt-1", "clear")
     false
   else

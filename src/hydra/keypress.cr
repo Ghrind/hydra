@@ -6,8 +6,10 @@ module Hydra
       5 => "ctrl-e",
       13 => "enter",
       24 => "ctrl-x",
+      27 => "escape",
       127 => "backspace",
-      27 => "escape"
+      338 => "keypress.page_down",
+      339 => "keypress.page_up",
     }
 
     getter :name
