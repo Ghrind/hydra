@@ -32,59 +32,31 @@ app.add_element({
   :label => "Commands"
 })
 
-# Prompt 1
+# Create two prompts, activated by a different character
+{ 1 => "c", 2 => "d" }.each do |index, char|
+  app.bind("keypress.#{char}", "application") do |event_hub|
+    if event_hub.has_focus?("prompt-#{index}")
+      true
+    else
+      event_hub.trigger("prompt-#{index}", "show")
+      event_hub.focus("prompt-#{index}")
+      false
+    end
+  end
 
-app.bind("keypress.c", "application") do |event_hub|
-  if event_hub.has_focus?("prompt-1")
-    true
-  else
-    event_hub.trigger("prompt-1", "show")
-    event_hub.focus("prompt-1")
-    false
+  app.bind("keypress.enter", "prompt-#{index}") do |event_hub, event, elements|
+    if event_hub.has_focus?("prompt-#{index}")
+      event_hub.trigger("prompt-#{index}", "hide")
+      event_hub.unfocus
+      element = elements.by_id("prompt-#{index}")
+      event_hub.trigger("logbox", "add_message", { "message" => "Prompt #{index}: '#{element.value}'" })
+      event_hub.trigger("prompt-#{index}", "clear")
+      false
+    else
+      true
+    end
   end
 end
-
-app.bind("keypress.enter", "prompt-1") do |event_hub, event, elements|
-  if event_hub.has_focus?("prompt-1")
-    event_hub.trigger("prompt-1", "hide")
-    event_hub.unfocus
-    element = elements.by_id("prompt-1")
-    event_hub.trigger("logbox", "add_message", { "message" => "Prompt 1: '#{element.value}'" })
-    event_hub.trigger("prompt-1", "clear")
-    false
-  else
-    true
-  end
-end
-
-# End of Promt 1
-
-# Prompt 2
-
-app.bind("keypress.d", "application") do |event_hub|
-  if event_hub.has_focus?("prompt-2")
-    true
-  else
-    event_hub.trigger("prompt-2", "show")
-    event_hub.focus("prompt-2")
-    false
-  end
-end
-
-app.bind("keypress.enter", "prompt-2") do |event_hub, event, elements|
-  if event_hub.has_focus?("prompt-2")
-    event_hub.trigger("prompt-2", "hide")
-    event_hub.unfocus
-    element = elements.by_id("prompt-2")
-    event_hub.trigger("logbox", "add_message", { "message" => "Prompt 2: '#{element.value}'" })
-    event_hub.trigger("prompt-2", "clear")
-    false
-  else
-    true
-  end
-end
-
-# End of Promt 2
 
 # Pressing ctrl + x will close all prompts
 app.bind("keypress.ctrl-x", "application") do |event_hub|
