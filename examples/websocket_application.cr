@@ -29,7 +29,7 @@ end
 
 app.bind("keypress.enter", "prompt") do |_, _, elements, state|
   prompt = elements.by_id("prompt")
-  socket.puts prompt.value
+  socket.puts Hydra::ExtendedString.escape(prompt.value)
   message = socket.gets
   state["message"] = message if message
   true

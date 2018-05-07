@@ -45,7 +45,7 @@ app.bind("keypress.enter", "prompt-1") do |event_hub, event, elements, state|
     event_hub.trigger("prompt-1", "hide")
     event_hub.unfocus
     element = elements.by_id("prompt-1")
-    state["player.name"] = element.value
+    state["player.name"] = Hydra::ExtendedString.escape(element.value)
     event_hub.trigger("prompt-1", "clear")
     false
   else
