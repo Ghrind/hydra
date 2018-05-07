@@ -16,9 +16,19 @@ module Hydra
       @win.clear
       grid.each do |cell, x, y|
         cell_color = "default"
+        bold = false
         cell.tags.each do |tag|
           color = color_from_tag(tag)
-          cell_color = color unless color.nil?
+          if color
+            cell_color = color
+          elsif tag == "bold"
+            bold = true
+          end
+        end
+        if bold
+          @win.attribute_on(Crt::Attribute::Bold)
+        else
+          @win.attribute_off(Crt::Attribute::Bold)
         end
         @win.attribute_on(@color_pairs[cell_color])
         @win.print(x, y, cell.char)
@@ -38,13 +48,14 @@ module Hydra
       if md = tag.match(/\A(#{@color_pairs.keys.join("|")})-fg\Z/)
         return md[1]
       end
-      "default"
+      nil
     end
 
     private def init_colors
       @color_pairs = {
         "default" => Crt::ColorPair.new(Crt::Color::White, Crt::Color::Black),
         "red" => Crt::ColorPair.new(Crt::Color::Red, Crt::Color::Black),
+        "blue" => Crt::ColorPair.new(Crt::Color::Blue, Crt::Color::Black),
         "green" => Crt::ColorPair.new(Crt::Color::Green, Crt::Color::Black)
       }
     end
