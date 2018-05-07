@@ -27,20 +27,21 @@ module Hydra
       super
       @width = 50
       @height = 10
-      @messages = Array(String).new
+      @messages = Array(ExtendedString).new
       @scroll_index = 0
     end
 
-    def content
+    def content() Hydra::ExtendedString
       a = 0
       if @messages.size > inner_height
         a = @messages.size - inner_height - @scroll_index
       end
-      add_box(@messages[a..@messages.size - 1 - @scroll_index])
+      res = add_box(@messages[a..@messages.size - 1 - @scroll_index])
+      Hydra::ExtendedString.new(res)
     end
 
     def add_message(message)
-      @messages << message
+      @messages << ExtendedString.new(message)
     end
 
     def scroll(value : Int32)
@@ -72,7 +73,8 @@ module Hydra
     def add_box(content)
       res = "┌" + "─" + @label.ljust(@width - 3, '─') + (can_scroll_up? ? "↑" : "┐") + "\n"
       content.each do |item|
-        res += "│" + item.ljust(@width - 2) + "│\n"
+        pad = item.string.size - item.stripped.size
+        res += "│" + item.string.ljust(@width - 2 + pad) + "│\n"
       end
       (inner_height - content.size).times do
         res += "│" + "".ljust(@width - 2) + "│\n"

@@ -11,8 +11,8 @@ module Hydra
       instance
     end
 
-    def content
-      box_content(@value)
+    def content() Hydra::ExtendedString
+      ExtendedString.new(box_content(@value))
     end
 
     private def box_content(content)
@@ -21,7 +21,7 @@ module Hydra
       end
       top_bar = "─" + @label.ljust(width - 3, '─')
       res = "┌" + top_bar + "┐\n"
-      res += "│" + content.ljust(width - 2) + "│\n"
+      res += "│" + ExtendedString.escape(content.ljust(width - 2)) + "│\n"
       res += "└" + "─" * (width - 2) + "┘"
       res
     end

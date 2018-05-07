@@ -1,4 +1,5 @@
 require "./element_event_interface"
+require "./extended_string"
 
 module Hydra
   class Element
@@ -46,8 +47,8 @@ module Hydra
       @label = options[:label]? ? options[:label] : ""
     end
 
-    def content
-      "Content for #{self.class.name} is undefined"
+    def content() Hydra::ExtendedString
+      Hydra::ExtendedString.new("Content for #{self.class.name} is undefined")
     end
 
     def width

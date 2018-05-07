@@ -42,7 +42,7 @@ describe "Element" do
   describe "#content" do
     it "returns a generic message" do
       element = Hydra::Element.new("id")
-      element.content.should eq "Content for Hydra::Element is undefined"
+      element.content.string.should eq "Content for Hydra::Element is undefined"
     end
   end
 end

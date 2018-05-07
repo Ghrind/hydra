@@ -12,8 +12,8 @@ end
 class TestElement < Hydra::Element
   property :position
 
-  def content
-    @value
+  def content() Hydra::ExtendedString
+    Hydra::ExtendedString.new(@value)
   end
 
   def height

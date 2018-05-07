@@ -52,9 +52,18 @@ module Hydra
       end
 
       i = 0
-      element.content.each_line do |l|
-        print(x + i, y, l, Array(String).new)
-        i += 1
+      j = 0
+
+      element.content.chunks.each do |chunk|
+        lines = chunk.string.split("\n")
+        lines.each_with_index do |l, idx|
+          if idx > 0
+            i += 1
+            j = 0
+          end
+          print(x + i, y + j, l, chunk.tags)
+          j += l.size
+        end
       end
     end
   end

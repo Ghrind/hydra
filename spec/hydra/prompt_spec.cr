@@ -6,18 +6,18 @@ describe "Prompt" do
     it "displays a boxed version of the content" do
       prompt = Hydra::Prompt.build("id")
       prompt.append("foobar")
-      prompt.content.should eq ["┌────────────────────────────┐",
-                                "│foobar                      │",
-                                "└────────────────────────────┘"].join("\n")
+      prompt.content.string.should eq ["┌────────────────────────────┐",
+                                       "│foobar                      │",
+                                       "└────────────────────────────┘"].join("\n")
     end
 
     context "with a label" do
       it "shows the label in the top bar" do
         prompt = Hydra::Prompt.build("id", {:label => "toto"})
         prompt.append("foobar")
-        prompt.content.should eq ["┌─toto───────────────────────┐",
-                                  "│foobar                      │",
-                                  "└────────────────────────────┘"].join("\n")
+        prompt.content.string.should eq ["┌─toto───────────────────────┐",
+                                         "│foobar                      │",
+                                         "└────────────────────────────┘"].join("\n")
       end
     end
 
@@ -25,9 +25,9 @@ describe "Prompt" do
       it "shows the end of the value" do
       prompt = Hydra::Prompt.build("id")
       prompt.append("abcdefghijklmnopqrstuvwxyz1234567890")
-      prompt.content.should eq ["┌────────────────────────────┐",
-                                "│…jklmnopqrstuvwxyz1234567890│",
-                                "└────────────────────────────┘"].join("\n")
+      prompt.content.string.should eq ["┌────────────────────────────┐",
+                                       "│…jklmnopqrstuvwxyz1234567890│",
+                                       "└────────────────────────────┘"].join("\n")
       end
     end
   end

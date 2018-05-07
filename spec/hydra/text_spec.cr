@@ -25,20 +25,20 @@ describe "Text" do
       text = Hydra::Text.new("")
       text.value = "fo\nbar"
 
-      text.content.should eq ["┌───┐",
-                               "│fo │",
-                               "│bar│",
-                               "└───┘"].join("\n")
+      text.content.string.should eq ["┌───┐",
+                                     "│fo │",
+                                     "│bar│",
+                                     "└───┘"].join("\n")
     end
     context "when the label is longer than the content" do
       it "expends the box accordingly" do
         text = Hydra::Text.new("", { :label => "foobar" })
         text.value = "fo\nbar"
 
-        text.content.should eq ["┌─foobar─┐",
-                                "│fo      │",
-                                "│bar     │",
-                                "└────────┘"].join("\n")
+        text.content.string.should eq ["┌─foobar─┐",
+                                       "│fo      │",
+                                       "│bar     │",
+                                       "└────────┘"].join("\n")
       end
     end
   end

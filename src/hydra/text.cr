@@ -6,16 +6,20 @@ module Hydra
       super
     end
 
-    def content
-      box_content(@value)
+    def content() Hydra::ExtendedString
+      Hydra::ExtendedString.new(box_content(@value))
     end
 
     def width
-      (@value.split("\n") + [@label + "**"]).map { |s| s.size }.max + 2
+      (extended_value.stripped.split("\n") + [@label + "**"]).map { |s| s.size }.max + 2
     end
 
     def height
-      @value.split("\n").size + 2
+      extended_value.stripped.split("\n").size + 2
+    end
+
+    def extended_value
+      Hydra::ExtendedString.new(@value)
     end
 
     private def box_content(content)

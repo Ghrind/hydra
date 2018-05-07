@@ -49,7 +49,7 @@ app.add_element({
       event_hub.trigger("prompt-#{index}", "hide")
       event_hub.unfocus
       element = elements.by_id("prompt-#{index}")
-      event_hub.trigger("logbox", "add_message", { "message" => "Prompt #{index}: '#{element.value}'" })
+      event_hub.trigger("logbox", "add_message", { "message" => "Prompt #{index}: <red-fg>'#{Hydra::ExtendedString.escape(element.value)}'</red-fg>" })
       event_hub.trigger("prompt-#{index}", "clear")
       false
     else
