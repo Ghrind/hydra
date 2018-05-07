@@ -1,6 +1,14 @@
 require "spec"
 require "../../src/hydra/view"
 
+def dump_view(view : Hydra::View) : String
+  dump = Array(String).new
+  view.grid.lines.each do |line|
+    dump << line.map { |cell| cell.char }.join("")
+  end
+  dump.join("\n")
+end
+
 class TestElement < Hydra::Element
   property :position
 
@@ -27,11 +35,11 @@ describe "View" do
       element.value = "abc\ndef\nghi"
 
       view.render_element(element)
-      view.dump.should eq ["          ",
-                           "          ",
-                           " abc      ",
-                           " def      ",
-                           " ghi      "].join("\n")
+      dump_view(view).should eq ["          ",
+                                 "          ",
+                                 " abc      ",
+                                 " def      ",
+                                 " ghi      "].join("\n")
     end
 
     context "when the element is centered" do
@@ -43,11 +51,11 @@ describe "View" do
         element.value = "abc\ndef\nghi"
 
         view.render_element(element)
-        view.dump.should eq ["          ",
-                             "   abc    ",
-                             "   def    ",
-                             "   ghi    ",
-                             "          "].join("\n")
+        dump_view(view).should eq ["          ",
+                                   "   abc    ",
+                                   "   def    ",
+                                   "   ghi    ",
+                                   "          "].join("\n")
       end
     end
 
@@ -72,11 +80,11 @@ describe "View" do
           element_2.value = box
 
           view.render([element_1, element_2])
-          view.dump.should eq ["┌─┬─┐     ",
-                               "│ │ │     ",
-                               "└─┴─┘     ",
-                               "          ",
-                               "          "].join("\n")
+          dump_view(view).should eq ["┌─┬─┐     ",
+                                     "│ │ │     ",
+                                     "└─┴─┘     ",
+                                     "          ",
+                                     "          "].join("\n")
         end
       end
       context "when four borders are overlapping" do
@@ -105,11 +113,11 @@ describe "View" do
           element_4.value = box
 
           view.render([element_1, element_2, element_3, element_4])
-          view.dump.should eq ["┌─┬─┐     ",
-                               "│ │ │     ",
-                               "├─┼─┤     ",
-                               "│ │ │     ",
-                               "└─┴─┘     "].join("\n")
+          dump_view(view).should eq ["┌─┬─┐     ",
+                                     "│ │ │     ",
+                                     "├─┼─┤     ",
+                                     "│ │ │     ",
+                                     "└─┴─┘     "].join("\n")
         end
       end
     end
@@ -123,11 +131,11 @@ describe "View" do
         element.template = "{{a}}"
 
         view.render([element])
-        view.dump.should eq ["          ",
-                             "          ",
-                             "  {{a}}   ",
-                             "          ",
-                             "          "].join("\n")
+        dump_view(view).should eq ["          ",
+                                   "          ",
+                                   "  {{a}}   ",
+                                   "          ",
+                                   "          "].join("\n")
       end
 
       it "replaces the bindings with values from the state" do
@@ -138,11 +146,11 @@ describe "View" do
         element.template = "{{a}}"
 
         view.render([element], { "a" => "1234567890"})
-        view.dump.should eq ["          ",
-                             "          ",
-                             "1234567890",
-                             "          ",
-                             "          "].join("\n")
+        dump_view(view).should eq ["          ",
+                                   "          ",
+                                   "1234567890",
+                                   "          ",
+                                   "          "].join("\n")
       end
 
     end

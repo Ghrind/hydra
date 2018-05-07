@@ -1,4 +1,6 @@
 require "crt"
+require "./grid"
+require "./cell"
 
 module Hydra
   class Screen
@@ -6,9 +8,11 @@ module Hydra
       @win = Crt::Window.new(x, y)
     end
 
-    def update(content : String)
+    def update(grid : Grid(Cell))
       @win.clear
-      @win.print(0, 0, content)
+      grid.each do |cell, x, y|
+        @win.print(x, y, cell.char)
+      end
       @win.refresh
     end
 

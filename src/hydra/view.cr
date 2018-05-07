@@ -1,4 +1,5 @@
 require "./grid"
+require "./cell"
 require "./element"
 require "./filter"
 require "./border_filter"
@@ -6,27 +7,22 @@ require "./border_filter"
 module Hydra
   class View
     property :filters
-    getter :x, :y
+    getter :x, :y, :grid
     def initialize(x = 20, y = 60)
       @x = x
       @y = y
-      @grid = Grid.new(x, y)
+      @grid = Grid(Hydra::Cell).new(x, y)
       @filters = Array(Filter.class).new
     end
 
-    def dump
-      @filters.reduce(@grid) do |memo, filter|
-        filter.apply(memo)
-      end.dump
-    end
-
     def clear
-      @grid = Grid.new(@x, @y)
+      @grid = Grid(Hydra::Cell).new(@x, @y)
     end
 
-    def print(x : Int, y : Int, text : String)
+    def print(x : Int, y : Int, text : String, tags : Array(String))
       text.split("").each_with_index do |char, i|
-        @grid[x, y + i] = char
+        cell = Hydra::Cell.new(char, tags)
+        @grid[x, y + i] = cell
       end
     end
 
@@ -41,6 +37,9 @@ module Hydra
         end
         render_element(el) if el.visible
       end
+      @filters.reduce(@grid) do |memo, filter|
+        filter.apply(memo)
+      end
     end
 
     def render_element(element : Element)
@@ -54,7 +53,7 @@ module Hydra
 
       i = 0
       element.content.each_line do |l|
-        print(x + i, y, l)
+        print(x + i, y, l, Array(String).new)
         i += 1
       end
     end

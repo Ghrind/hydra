@@ -102,7 +102,7 @@ module Hydra
 
     private def update_screen
       @view.render(@elements.to_a, @state)
-      @screen.update(@view.dump.gsub("\n", ""))
+      @screen.update(@view.grid)
     end
 
     def bind(event : String, target : String, behavior : String)
