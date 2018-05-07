@@ -41,5 +41,16 @@ describe "Text" do
                                        "└────────┘"].join("\n")
       end
     end
+    context "when there is a tag on a newline" do
+      it "justifies displays the border correctly" do
+        text = Hydra::Text.new("")
+        text.value = "The word <red-fg>red</red-fg> is red\n<green-fg>This text is green</green-fg>"
+
+        text.content.stripped.should eq ["┌───────────────────┐",
+                                         "│The word red is red│",
+                                         "│This text is green │",
+                                         "└───────────────────┘"].join("\n")
+      end
+    end
   end
 end
