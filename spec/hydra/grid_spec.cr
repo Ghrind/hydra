@@ -1,5 +1,5 @@
 require "spec"
-require "../src/hydra/grid"
+require "../../src/hydra/grid"
 
 describe "Grid" do
   describe "#[]" do

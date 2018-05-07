@@ -1,5 +1,5 @@
 require "spec"
-require "../src/hydra/application"
+require "../../src/hydra/application"
 
 class TestScreen < Hydra::Screen
   @chars : Array(Int32)

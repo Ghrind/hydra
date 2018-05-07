@@ -1,5 +1,5 @@
 require "spec"
-require "../src/hydra/view"
+require "../../src/hydra/view"
 
 class TestElement < Hydra::Element
   property :position

@@ -1,5 +1,5 @@
 require "spec"
-require "../src/hydra/prompt"
+require "../../src/hydra/prompt"
 
 describe "Prompt" do
   describe "#content" do

@@ -1,5 +1,5 @@
 require "spec"
-require "../src/hydra/text"
+require "../../src/hydra/text"
 
 describe "Text" do
   describe "#width" do

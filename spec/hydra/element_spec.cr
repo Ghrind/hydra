@@ -1,5 +1,5 @@
 require "spec"
-require "../src/hydra/element"
+require "../../src/hydra/element"
 
 describe "Element" do
   describe "#position" do
