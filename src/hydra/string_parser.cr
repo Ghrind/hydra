@@ -34,6 +34,7 @@ module Hydra
           end
         end
         if @escape
+          @escape = false
           if @in_tag
             @tag += ESCAPE_CHAR
           else
@@ -56,6 +57,14 @@ module Hydra
           @tag += char
         else
           @current_chunk.string += char
+        end
+      end
+      if @escape
+        @escape = false
+        if @in_tag
+          @tag += ESCAPE_CHAR
+        else
+          @current_chunk.string += ESCAPE_CHAR
         end
       end
       store_current_chunk
