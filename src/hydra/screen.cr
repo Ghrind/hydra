@@ -1,63 +1,59 @@
-require "crt"
+require "termbox"
 require "./grid"
 require "./cell"
+require "./color"
 
 module Hydra
   class Screen
     def initialize(x : Int32, y : Int32)
-      Crt.init
-      Crt.start_color
-      @win = Crt::Window.new(x, y)
-      @color_pairs = Hash(String, Crt::ColorPair).new
-      init_colors
+      @win = Termbox::Window.new#(x, y)
+
+      # Use 256 color mode
+      @win.set_output_mode(Termbox::OUTPUT_256)
+
+      @foreground_color = Color.new("white")
+      @background_color = Color.new("black")
+      @win.set_primary_colors(@foreground_color.index, @background_color.index)
     end
 
     def update(grid : Grid(Cell))
       @win.clear
       grid.each do |cell, x, y|
-        cell_color = "default"
-        bold = false
+        foreground_color = @foreground_color
+        background_color = @background_color
         cell.tags.each do |tag|
           color = color_from_tag(tag)
           if color
-            cell_color = color
-          elsif tag == "bold"
-            bold = true
+            foreground_color = color
           end
         end
-        if bold
-          @win.attribute_on(Crt::Attribute::Bold)
-        else
-          @win.attribute_off(Crt::Attribute::Bold)
-        end
-        @win.attribute_on(@color_pairs[cell_color])
-        @win.print(x, y, cell.char)
+        @win.write_string(Termbox::Position.new(y, x), cell.char, foreground_color.index, background_color.index)
       end
-      @win.refresh
+      @win.render
     end
 
-    def getch
-      @win.getch
+    def getch() Hydra::Keypress
+      event = @win.peek(1)
+      if event.type == Termbox::EVENT_KEY
+        if event.ch > 0
+          Keypress.new(event.ch)
+        elsif event.key > 0
+          Keypress.new(UInt32.new(event.key))
+        end
+      else
+        return nil
+      end
     end
 
     def close
-      Crt.done
+      @win.shutdown
     end
 
     def color_from_tag(tag : String) String
-      if md = tag.match(/\A(#{@color_pairs.keys.join("|")})-fg\Z/)
-        return md[1]
+      if md = tag.match(/\A(#{Color::COLORS.keys.join("|")})-fg\Z/)
+        return Color.new(md[1])
       end
       nil
-    end
-
-    private def init_colors
-      @color_pairs = {
-        "default" => Crt::ColorPair.new(Crt::Color::White, Crt::Color::Black),
-        "red" => Crt::ColorPair.new(Crt::Color::Red, Crt::Color::Black),
-        "blue" => Crt::ColorPair.new(Crt::Color::Blue, Crt::Color::Black),
-        "green" => Crt::ColorPair.new(Crt::Color::Green, Crt::Color::Black)
-      }
     end
   end
 end

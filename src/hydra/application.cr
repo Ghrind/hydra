@@ -85,9 +85,9 @@ module Hydra
       teardown
     end
 
-    private def handle_keypress(char : Int32)
-      return unless char >= 0
-      event = Event.new_from_keypress_char(char)
+    private def handle_keypress(keypress : Keypress | Nil)
+      return unless keypress
+      event = Event.new(keypress)
       @event_hub.broadcast(event, @state, @elements)
       update_screen
     end

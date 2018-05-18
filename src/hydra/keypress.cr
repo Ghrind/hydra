@@ -18,7 +18,7 @@ module Hydra
     @char : String
     @name : String
 
-    def initialize(key : Int32)
+    def initialize(key : UInt32)
       if MAPPING[key]?
         @name = MAPPING[key]
         @char = ""
