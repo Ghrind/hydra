@@ -5,12 +5,12 @@ class TestScreen < Hydra::Screen
   @chars : Array(Int32)
   property :chars
 
-  def getch() : Int32
-    return 0 if @chars.size.zero?
-    @chars.shift
+  def getch() Hydra::Keypress
+    return nil if @chars.size.zero?
+    Hydra::Keypress.new(UInt32.new(@chars.shift))
   end
 
-  def initialize(x : Int32, y : Int32)
+  def initialize(height : Int32, width : Int32)
     @chars = Array(Int32).new
     super
   end

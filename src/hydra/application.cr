@@ -4,6 +4,7 @@ require "./event_hub"
 require "./event_interface"
 require "logger"
 require "./screen"
+require "./terminal_screen"
 require "./view"
 require "./state"
 
@@ -44,7 +45,7 @@ module Hydra
         logger.level = Logger::DEBUG
       end
 
-      screen = Screen.new(view.x, view.y) unless screen
+      screen = TerminalScreen.new(view.x, view.y) unless screen
 
       elements = ElementCollection.new unless elements
 
