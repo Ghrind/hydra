@@ -7,28 +7,28 @@ describe "ExtendedString" do
       it "parses tags properly" do
         str = Hydra::ExtendedString.new("Hi <red-fg>Nathan</red-fg>!")
         str.chunks.map { |i| i.string }.should eq ["Hi ", "Nathan", "!"]
-        str.chunks.map { |i| i.tags }.should eq [Array(Hydra::ExtendedString).new, ["red-fg"], Array(Hydra::ExtendedString).new]
+        str.chunks.map { |i| i.tags }.should eq [Array(String).new, ["red-fg"], Array(String).new]
       end
     end
     context "with complex markup" do
       it "parses tags properly" do
         str = Hydra::ExtendedString.new("Hi <bold><red-fg>Nathan</red-fg>!</bold>")
         str.chunks.map { |i| i.string }.should eq ["Hi ", "Nathan", "!"]
-        str.chunks.map { |i| i.tags }.should eq [Array(Hydra::ExtendedString).new, ["bold", "red-fg"], ["bold"]]
+        str.chunks.map { |i| i.tags }.should eq [Array(String).new, ["bold", "red-fg"], ["bold"]]
       end
     end
     context "when closing a tag that is not open" do
       it "ignores the closing tag" do
         str = Hydra::ExtendedString.new("A</red-fg>B")
         str.chunks.map { |i| i.string }.should eq ["A", "B"]
-        str.chunks.map { |i| i.tags }.should eq [Array(Hydra::ExtendedString).new, Array(Hydra::ExtendedString).new]
+        str.chunks.map { |i| i.tags }.should eq [Array(String).new, Array(String).new]
       end
     end
     context "when a tag is escaped" do
       it "treats the tag as plain text" do
         str = Hydra::ExtendedString.new("\\<foo>bla\\</foo>")
         str.chunks.map { |i| i.string }.should eq ["<foo>bla</foo>"]
-        str.chunks.map { |i| i.tags }.should eq [Array(Hydra::ExtendedString).new]
+        str.chunks.map { |i| i.tags }.should eq [Array(String).new]
       end
     end
     context "when there is a '\' in the string" do
