@@ -21,7 +21,7 @@ app.add_element({
 app.add_element({
   :id => "logbox",
   :type => "logbox",
-  :position => "40:0",
+  :position => "bottom-left",
   :label => "Messages"
 })
 

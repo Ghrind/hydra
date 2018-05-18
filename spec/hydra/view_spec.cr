@@ -87,6 +87,21 @@ describe "View" do
                                      "          "].join("\n")
         end
       end
+      context "when the element's position is bottom-left" do
+        it "renders the element in the bottom left corner" do
+          view = Hydra::View.new(4, 4)
+          element = TestElement.new("1")
+          element.position = "bottom-left"
+          element.value = "##\n##"
+
+          view.render([element])
+
+          dump_view(view).should eq ["    ",
+                                     "    ",
+                                     "##  ",
+                                     "##  "].join("\n")
+        end
+      end
       context "when four borders are overlapping" do
         it "merges borders" do
           view = Hydra::View.new(5, 10)
@@ -104,11 +119,11 @@ describe "View" do
           element_2.position = "0:2"
           element_2.value = box
 
-          element_3 = TestElement.new("1")
+          element_3 = TestElement.new("3")
           element_3.position = "2:0"
           element_3.value = box
 
-          element_4 = TestElement.new("2")
+          element_4 = TestElement.new("4")
           element_4.position = "2:2"
           element_4.value = box
 

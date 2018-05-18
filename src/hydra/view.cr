@@ -47,6 +47,8 @@ module Hydra
       if element.position == "center"
         x = (@height.to_f / 2 - element.height.to_f / 2).floor.to_i
         y = (@width.to_f / 2 - element.width.to_f / 2).floor.to_i
+      elsif element.position == "bottom-left"
+        x = @height - element.height
       else
         x, y = element.position.split(":").map(&.to_i)
       end
