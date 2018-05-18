@@ -18,6 +18,8 @@ module Hydra
     end
 
     def []=(x : Int32, y : Int32, value : T)
+      return nil if (x > @map.size - 1)
+      return nil if (y > @map[x].size - 1)
       @map[x][y] = value
     end
 
