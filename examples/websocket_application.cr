@@ -35,4 +35,8 @@ app.bind("keypress.enter", "prompt") do |_, _, elements, state|
   true
 end
 
+# Pressing ctrl-c will quit
+app.bind("keypress.ctrl-c", "application", "stop")
+
 app.run
+app.teardown

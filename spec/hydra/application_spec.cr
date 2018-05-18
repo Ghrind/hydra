@@ -10,7 +10,7 @@ class TestScreen < Hydra::Screen
     Hydra::Keypress.new(UInt32.new(@chars.shift))
   end
 
-  def initialize(height : Int32, width : Int32)
+  def initialize
     @chars = Array(Int32).new
     super
   end
@@ -19,12 +19,14 @@ end
 describe "Application" do
   describe ".setup" do
     it "should setup a whole application properly" do
-      Hydra::Application.setup
+      # NOTE: For some reason, instanciating the application triggers the
+      #       Termbox::Window shutdown
+      application = Hydra::Application.setup
     end
   end
 
   it "should start an application and stop it" do
-    screen = TestScreen.new(50, 100)
+    screen = TestScreen.new
     screen.chars = [24] # 24 => ctrl-x
 
     app = Hydra::Application.setup(screen: screen)

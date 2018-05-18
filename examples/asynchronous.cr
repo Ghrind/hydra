@@ -22,3 +22,4 @@ app.bind("keypress.s", "application") do |event_hub|
 end
 
 app.run
+app.teardown

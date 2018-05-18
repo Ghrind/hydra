@@ -1,8 +1,6 @@
 module Hydra
   class Screen
-    def initialize(height : Int32, width : Int32)
-      @height = height
-      @width = width
+    def initialize
     end
 
     def getch() Keypress
@@ -13,6 +11,14 @@ module Hydra
     end
 
     def close
+    end
+
+    def width
+      0
+    end
+
+    def height
+      0
     end
   end
 end

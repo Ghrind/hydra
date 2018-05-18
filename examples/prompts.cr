@@ -72,3 +72,5 @@ end
 app.bind("keypress.q", "application", "stop")
 
 app.run
+
+app.teardown

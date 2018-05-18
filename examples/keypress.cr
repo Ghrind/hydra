@@ -5,7 +5,6 @@ app = Hydra::Application.setup
 app.add_element({
   :id => "logbox",
   :type => "logbox",
-  :position => "40:0",
   :label => "Messages"
 })
 
@@ -14,4 +13,8 @@ app.bind("keypress.*", "application") do |event_hub, event|
   true
 end
 
+# Pressing ctrl-c will quit
+app.bind("keypress.ctrl-c", "application", "stop")
+
 app.run
+app.teardown

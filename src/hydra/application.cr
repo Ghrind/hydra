@@ -35,17 +35,17 @@ module Hydra
 
       event_hub = Hydra::EventHub.new unless event_hub
 
-      unless view
-        view = Hydra::View.new(x: 50, y: 100)
-        view.filters << BorderFilter
-      end
-
       unless logger
         logger = Logger.new(File.open("./debug.log", "w"))
         logger.level = Logger::DEBUG
       end
 
-      screen = TerminalScreen.new(view.x, view.y) unless screen
+      screen = TerminalScreen.new unless screen
+
+      unless view
+        view = Hydra::View.new(height: screen.height, width: screen.width)
+        view.filters << BorderFilter
+      end
 
       elements = ElementCollection.new unless elements
 
@@ -83,7 +83,6 @@ module Hydra
         sleep 0.01
         handle_keypress @screen.getch
       end
-      teardown
     end
 
     private def handle_keypress(keypress : Keypress | Nil)
@@ -93,7 +92,7 @@ module Hydra
       update_screen
     end
 
-    private def teardown
+    def teardown
       @screen.close
     end
 

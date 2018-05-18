@@ -7,16 +7,16 @@ require "./border_filter"
 module Hydra
   class View
     property :filters
-    getter :x, :y, :grid
-    def initialize(x = 20, y = 60)
-      @x = x
-      @y = y
-      @grid = Grid(Hydra::Cell).new(x, y)
+    getter :height, :width, :grid
+    def initialize(height : Int32, width : Int32)
+      @height = height
+      @width = width
+      @grid = Grid(Hydra::Cell).new(height, width)
       @filters = Array(Filter.class).new
     end
 
     def clear
-      @grid = Grid(Hydra::Cell).new(@x, @y)
+      @grid = Grid(Hydra::Cell).new(@height, @width)
     end
 
     def print(x : Int, y : Int, text : String, tags : Array(String))
@@ -45,8 +45,8 @@ module Hydra
     def render_element(element : Element)
       x, y = 0, 0
       if element.position == "center"
-        x = (@x.to_f / 2 - element.height.to_f / 2).floor.to_i
-        y = (@y.to_f / 2 - element.width.to_f / 2).floor.to_i
+        x = (@height.to_f / 2 - element.height.to_f / 2).floor.to_i
+        y = (@width.to_f / 2 - element.width.to_f / 2).floor.to_i
       else
         x, y = element.position.split(":").map(&.to_i)
       end

@@ -6,9 +6,9 @@ require "./color"
 
 module Hydra
   class TerminalScreen < Screen
-    def initialize(width : Int32, height : Int32)
+    def initialize
       super
-      @win = Termbox::Window.new#(x, y)
+      @win = Termbox::Window.new
 
       # Use 256 color mode
       @win.set_output_mode(Termbox::OUTPUT_256)
@@ -49,6 +49,14 @@ module Hydra
 
     def close
       @win.shutdown
+    end
+
+    def height
+      @win.height
+    end
+
+    def width
+      @win.width
     end
 
     def color_from_tag(tag : String) String
