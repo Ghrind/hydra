@@ -22,6 +22,7 @@ describe "Application" do
       # NOTE: For some reason, instanciating the application triggers the
       #       Termbox::Window shutdown
       application = Hydra::Application.setup
+      application.teardown
     end
   end
 
