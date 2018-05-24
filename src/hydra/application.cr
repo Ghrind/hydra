@@ -25,6 +25,8 @@ module Hydra
     property :event_interface
     @event_interface : ApplicationEventInterface
 
+    getter :logger
+
     # Creates a new application with injected dependencies and sensible defaults
     def self.setup(event_hub : EventHub | Nil = nil,
                    view : View | Nil  = nil,
@@ -105,12 +107,24 @@ module Hydra
       @screen.update(@view.grid)
     end
 
-    def bind(event : String, target : String, behavior : String)
-      @event_hub.bind(event, target, behavior)
+    def bind(focus : String, event : String, target : String, behavior : String)
+      @event_hub.bind(focus, event, target, behavior)
     end
 
-    def bind(event : String, target : String,  &block : EventHub, Event, ElementCollection, State -> Bool)
-      @event_hub.bind(event, target, &block)
+   #def bind(event : String, target : String, behavior : String)
+   #  @event_hub.bind(event, target, behavior)
+   #end
+
+   #def bind(event : String, target : String,  &block : EventHub, Event, ElementCollection, State -> Bool)
+   #  @event_hub.bind(event, target, &block)
+   #end
+
+    def bind(focus : String, event : String,  &block : EventHub, Event, ElementCollection, State -> Bool)
+      @event_hub.bind(focus, event, &block)
+    end
+
+    def bind(event : String,  &block : EventHub, Event, ElementCollection, State -> Bool)
+      @event_hub.bind(event, &block)
     end
 
     def add_element(element : Element)

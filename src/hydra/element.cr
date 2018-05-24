@@ -112,5 +112,8 @@ module Hydra
 
     def clear
     end
+
+    def selected
+    end
   end
 end

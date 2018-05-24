@@ -13,9 +13,9 @@ module Hydra
     end
 
     def on_register(event_hub : Hydra::EventHub)
-      event_hub.bind("keypress.*", @target.id) do |eh, event|
+      event_hub.bind(@target.id, "keypress.*") do |eh, event|
         keypress = event.keypress
-        if eh.has_focus?(@target.id) && keypress
+        if keypress
           if keypress.char != ""
             eh.trigger(@target.id, "append", { :char => keypress.char })
             false

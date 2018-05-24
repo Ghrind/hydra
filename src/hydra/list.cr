@@ -20,6 +20,7 @@ module Hydra
   class List < Element
     property :width
     property :height
+    getter :selected
 
     NONE_SELECTED = -1
 
