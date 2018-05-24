@@ -29,6 +29,11 @@ module Hydra
             foreground_color = color
           end
         end
+        if cell.tags.includes?("inverted")
+          color = foreground_color
+          foreground_color = background_color
+          background_color = color
+        end
         @win.write_string(Termbox::Position.new(y, x), cell.char, foreground_color.index, background_color.index)
       end
       @win.render

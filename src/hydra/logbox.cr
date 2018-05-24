@@ -1,3 +1,5 @@
+require "./element"
+
 module Hydra
   class LogboxEventInterface < ElementEventInterface
     def trigger(behavior : String, payload = Hash(Symbol, String).new)

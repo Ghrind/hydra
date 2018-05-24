@@ -7,7 +7,8 @@ module Hydra
     KLASSES = {
       "prompt" => Hydra::Prompt,
       "logbox" => Hydra::Logbox,
-      "text"  => Hydra::Text
+      "text"  => Hydra::Text,
+      "list" => Hydra::List,
     }
 
     getter :id
@@ -87,6 +88,23 @@ module Hydra
 
     def can_scroll_down?
       false
+    end
+
+    def can_select_up?
+      false
+    end
+
+    def can_select_down?
+      false
+    end
+
+    def select_up
+    end
+
+    def select_down
+    end
+
+    def add_item(item : String)
     end
 
     def add_message(x : String)
