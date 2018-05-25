@@ -17,7 +17,7 @@ app.add_element({
   :label => "Selected"
 })
 
-app.bind("ready", "application") do |_, _, elements, state|
+app.bind("ready") do |_, _, elements, state|
   list = elements.by_id("my-list")
   list.add_item "Apples"
   list.add_item "Bananas"
@@ -27,14 +27,14 @@ app.bind("ready", "application") do |_, _, elements, state|
   true
 end
 
-app.bind("keypress.j", "application") do |event_hub, _, elements, state|
+app.bind("keypress.j") do |event_hub, _, elements, state|
   event_hub.trigger("my-list", "select_down")
   list = elements.by_id("my-list")
   state["selected"] = list.value
   true
 end
 
-app.bind("keypress.k", "application") do |event_hub, _, elements, state|
+app.bind("keypress.k") do |event_hub, _, elements, state|
   event_hub.trigger("my-list", "select_up")
   list = elements.by_id("my-list")
   state["selected"] = list.value

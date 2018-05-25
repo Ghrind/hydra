@@ -8,7 +8,7 @@ app.add_element({
   :label => "Messages"
 })
 
-app.bind("keypress.*", "application") do |event_hub, event|
+app.bind("keypress.*") do |event_hub, event|
   event_hub.trigger("logbox", "add_message", { "message" => "#{Hydra::ExtendedString.escape(event.keypress.inspect)}" })
   true
 end

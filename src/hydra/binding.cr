@@ -6,7 +6,7 @@ module Hydra
     getter :proc
     getter :focus
 
-    def initialize(target : String, behavior : String, blocking : Bool, focus : String, params = Hash(Symbol, String).new)
+    def initialize(target : String, behavior : String, blocking = false, focus : String | Nil = nil, params = Hash(Symbol, String).new)
       @focus = focus
       @blocking = blocking
       @target = target
@@ -24,17 +24,8 @@ module Hydra
    #  @proc = ->( x : EventHub, y : Event, a : ElementCollection, z : State) { true }
    #end
 
-    def initialize(focus : String, block : Proc(EventHub, Event, ElementCollection, State, Bool))
+    def initialize(block : Proc(EventHub, Event, ElementCollection, State, Bool), focus : String | Nil = nil)
       @focus = focus
-      @blocking = false # blocking is not used when there is a block, it is determined by the return value of the block
-      @target = ""
-      @behavior = ""
-      @params = Hash(Symbol, String).new
-      @proc = block
-    end
-
-    def initialize(block : Proc(EventHub, Event, ElementCollection, State, Bool))
-      @focus = nil
       @blocking = false # blocking is not used when there is a block, it is determined by the return value of the block
       @target = ""
       @behavior = ""

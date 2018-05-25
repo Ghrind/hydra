@@ -21,13 +21,13 @@ app.add_element({
   :position => "4:0"
 })
 
-app.bind("ready", "application") do |event_hub, _, _, state|
+app.bind("ready") do |event_hub, _, _, state|
   state["message"] = "..."
   event_hub.focus("prompt")
   true
 end
 
-app.bind("keypress.enter", "prompt") do |_, _, elements, state|
+app.bind("keypress.enter") do |_, _, elements, state|
   prompt = elements.by_id("prompt")
   socket.puts Hydra::ExtendedString.escape(prompt.value)
   message = socket.gets

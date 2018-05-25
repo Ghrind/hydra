@@ -111,9 +111,9 @@ module Hydra
       @event_hub.bind(focus, event, target, behavior)
     end
 
-   #def bind(event : String, target : String, behavior : String)
-   #  @event_hub.bind(event, target, behavior)
-   #end
+    def bind(event : String, target : String, behavior : String)
+      @event_hub.bind(event, target, behavior)
+    end
 
    #def bind(event : String, target : String,  &block : EventHub, Event, ElementCollection, State -> Bool)
    #  @event_hub.bind(event, target, &block)

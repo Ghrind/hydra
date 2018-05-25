@@ -40,14 +40,13 @@ module Hydra
 
     def bind(focus : String, event : String, target : String, behavior : String)
       binding = Binding.new(focus: focus, target: target, behavior: behavior, blocking: true)
-      @bindings[event] = Array(Binding).new unless @bindings.has_key?(event)
-      @bindings[event] << binding
+      add_binding(event, binding)
     end
 
-   #def bind(event : String, target : String, behavior : String)
-   #  @bindings[event] = Array(Binding).new unless @bindings.has_key?(event)
-   #  @bindings[event] << Binding.new(target, behavior)
-   #end
+    def bind(event : String, target : String, behavior : String)
+      binding = Binding.new(target: target, behavior: behavior)
+      add_binding(event, binding)
+    end
 
    #def bind(event : String, &block : EventHub, Event, ElementCollection, State -> Bool)
    #  @bindings[event] = Array(Binding).new unless @bindings.has_key?(event)
@@ -56,12 +55,15 @@ module Hydra
 
     def bind(focus : String, event : String, &block : EventHub, Event, ElementCollection, State -> Bool)
       binding = Binding.new(focus: focus, block: block)
-      @bindings[event] = Array(Binding).new unless @bindings.has_key?(event)
-      @bindings[event] << binding
+      add_binding(event, binding)
     end
 
     def bind(event : String, &block : EventHub, Event, ElementCollection, State -> Bool)
       binding = Binding.new(block: block)
+      add_binding(event, binding)
+    end
+
+    private def add_binding(event, binding)
       @bindings[event] = Array(Binding).new unless @bindings.has_key?(event)
       @bindings[event] << binding
     end

@@ -25,12 +25,12 @@ app.add_element({
   :label => "Commands"
 })
 
-app.bind("ready", "application") do |_, _, _, state|
+app.bind("ready") do |_, _, _, state|
   state["player.name"] = "John Doe"
   true
 end
 
-app.bind("keypress.c", "application") do |event_hub|
+app.bind("keypress.c") do |event_hub|
   if event_hub.has_focus?("prompt-1")
     true
   else
@@ -40,28 +40,24 @@ app.bind("keypress.c", "application") do |event_hub|
   end
 end
 
-app.bind("keypress.enter", "prompt-1") do |event_hub, event, elements, state|
-  if event_hub.has_focus?("prompt-1")
-    event_hub.trigger("prompt-1", "hide")
-    event_hub.unfocus
-    element = elements.by_id("prompt-1")
-    state["player.name"] = Hydra::ExtendedString.escape(element.value)
-    event_hub.trigger("prompt-1", "clear")
-    false
-  else
-    true
-  end
+app.bind("prompt-1", "keypress.enter") do |event_hub, event, elements, state|
+  event_hub.trigger("prompt-1", "hide")
+  event_hub.unfocus
+  element = elements.by_id("prompt-1")
+  state["player.name"] = Hydra::ExtendedString.escape(element.value)
+  event_hub.trigger("prompt-1", "clear")
+  false
 end
 
 # Pressing ctrl + x will close prompt
-app.bind("keypress.ctrl-x", "application") do |event_hub|
+app.bind("keypress.ctrl-x") do |event_hub|
   event_hub.trigger("prompt-1", "hide")
   event_hub.unfocus
   true
 end
 
 # Pressing q will quit
-app.bind("keypress.q", "application", "stop")
+app.bind("application", "keypress.q", "application", "stop")
 
 app.run
 app.teardown

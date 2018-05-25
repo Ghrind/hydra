@@ -13,7 +13,7 @@ app.add_element({
 app.bind("keypress.q", "application", "stop")
 
 # Pressing s will quit in 2 seconds
-app.bind("keypress.s", "application") do |event_hub|
+app.bind("keypress.s") do |event_hub|
   spawn do
     sleep 2
     event_hub.trigger("application", "stop")
