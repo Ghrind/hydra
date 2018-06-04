@@ -14,6 +14,8 @@ module Hydra
         @target.select_down if @target.can_select_down?
       when "add_item"
         @target.add_item payload["item"].to_s
+      when "change_item"
+        @target.change_item payload["index"].to_i, payload["item"]
       end
     end
   end
@@ -59,6 +61,12 @@ module Hydra
       @items << ExtendedString.new(item)
       if @items.size == 1
         @selected = 0
+      end
+    end
+
+    def change_item(index, item)
+      if @items[index]?
+        @items[index] = ExtendedString.new(item)
       end
     end
 

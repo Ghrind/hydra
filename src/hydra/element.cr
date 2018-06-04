@@ -107,6 +107,9 @@ module Hydra
     def add_item(item : String)
     end
 
+    def change_item(index : Int32, item : String)
+    end
+
     def add_message(x : String)
     end
 
