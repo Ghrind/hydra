@@ -1,7 +1,6 @@
 require "./element_collection"
 require "./event"
 require "./event_hub"
-require "./event_interface"
 require "logger"
 require "./screen"
 require "./terminal_screen"
@@ -9,22 +8,7 @@ require "./view"
 require "./state"
 
 module Hydra
-  class ApplicationEventInterface < EventInterface
-    def initialize(target : Application)
-      @target = target
-    end
-    def trigger(behavior : String, payload = Hash(Symbol, String))
-      if behavior == "stop"
-        @target.stop
-      else
-        super
-      end
-    end
-  end
   class Application
-    property :event_interface
-    @event_interface : ApplicationEventInterface
-
     getter :logger
 
     # Creates a new application with injected dependencies and sensible defaults
@@ -53,17 +37,9 @@ module Hydra
 
       state = State.new unless state
 
-      instance = build(view: view, event_hub: event_hub, logger: logger, screen: screen, state: state, elements: elements)
-      event_hub.register("application", instance.event_interface)
+      instance = new(view: view, event_hub: event_hub, logger: logger, screen: screen, state: state, elements: elements)
+      event_hub.register("application", instance)
 
-      instance
-    end
-
-    # Workaround for the inability to use self in an initializer
-    # https://github.com/crystal-lang/crystal/issues/4436
-    def self.build(**params)
-      instance = new(**params)
-      instance.event_interface = ApplicationEventInterface.new(instance)
       instance
     end
 
@@ -71,7 +47,6 @@ module Hydra
       @screen = screen
       @view = view
       @logger = logger
-      @event_interface = uninitialized ApplicationEventInterface
       @event_hub = event_hub
       @elements = elements
       @state = state
@@ -125,9 +100,7 @@ module Hydra
 
     def add_element(element : Element)
       @elements.push(element)
-      event_interface = element.event_interface
-      return unless event_interface
-      @event_hub.register(element.id, event_interface)
+      @event_hub.register(element.id, element)
     end
 
     def add_element(specs : Hash(Symbol, String))
@@ -135,5 +108,13 @@ module Hydra
       add_element(element)
     end
 
+    def trigger(behavior : String, payload = Hash(Symbol, String))
+      if behavior == "stop"
+        stop
+      end
+    end
+
+    def on_register(event_hub : EventHub)
+    end
   end
 end

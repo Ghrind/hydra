@@ -1,16 +1,7 @@
 require "./element"
-require "./prompt_element_event_interface"
 
 module Hydra
   class Prompt < Element
-    # Workaround for the inability to use self in an initializer
-    # https://github.com/crystal-lang/crystal/issues/4436
-    def self.build(id : String, options = Hash(Symbol, String).new)
-      instance = new(id, options)
-      instance.event_interface = PromptElementEventInterface.new(instance)
-      instance
-    end
-
     def content() Hydra::ExtendedString
       ExtendedString.new(box_content(@value))
     end
@@ -49,6 +40,37 @@ module Hydra
 
     def clear
       @value = ""
+    end
+
+    def trigger(behavior : String, payload = Hash(Symbol, String).new)
+      if behavior == "append"
+        append(payload[:char])
+      elsif behavior == "remove_last"
+        remove_last
+      elsif behavior == "clear"
+        clear
+      else
+        super
+      end
+    end
+
+    def on_register(event_hub : Hydra::EventHub)
+      event_hub.bind(id, "keypress.*") do |eh, event|
+        keypress = event.keypress
+        if keypress
+          if keypress.char != ""
+            eh.trigger(id, "append", { :char => keypress.char })
+            false
+          elsif keypress.name == "backspace"
+            eh.trigger(id, "remove_last")
+            false
+          else
+            true
+          end
+        else
+          true
+        end
+      end
     end
   end
 end

@@ -1,4 +1,3 @@
-require "./element_event_interface"
 require "./extended_string"
 
 module Hydra
@@ -15,17 +14,7 @@ module Hydra
     getter :visible
     property :position
     @position : String
-    property :event_interface
-    @event_interface : ElementEventInterface | Nil
     property :template, :value
-
-    # Workaround for the inability to use self in an initializer
-    # https://github.com/crystal-lang/crystal/issues/4436
-    def self.build(id : String, options = Hash(Symbol, String).new)
-      instance = new(id, options)
-      instance.event_interface = ElementEventInterface.new(instance)
-      instance
-    end
 
     def self.build(specs : Hash(Symbol, String)) : Element
       id = specs.delete(:id)
@@ -33,7 +22,7 @@ module Hydra
       type = specs.delete(:type)
       raise "Element is missing a type: #{specs}" unless type
       klass = KLASSES[type]
-      element = klass.build(id, specs)
+      element = klass.new(id, specs)
       element.position = specs[:position] if specs[:position]?
       element.hide if specs[:visible]? && specs[:visible] == "false"
       element
@@ -73,50 +62,15 @@ module Hydra
       @position = "#{x1 + x}:#{y1 + y}"
     end
 
-    def append(string : String)
+    def trigger(behavior : String, payload = Hash(Symbol, String).new)
+      if behavior == "show"
+        show
+      elsif behavior == "hide"
+        hide
+      end
     end
 
-    def remove_last
-    end
-
-    def can_scroll_up?
-      false
-    end
-
-    def scroll(x : Int32)
-    end
-
-    def can_scroll_down?
-      false
-    end
-
-    def can_select_up?
-      false
-    end
-
-    def can_select_down?
-      false
-    end
-
-    def select_up
-    end
-
-    def select_down
-    end
-
-    def add_item(item : String)
-    end
-
-    def change_item(index : Int32, item : String)
-    end
-
-    def add_message(x : String)
-    end
-
-    def clear
-    end
-
-    def selected
+    def on_register(event_hub : EventHub)
     end
   end
 end

@@ -18,7 +18,7 @@ app.add_element({
 })
 
 app.bind("ready") do |_, _, elements, state|
-  list = elements.by_id("my-list")
+  list = elements.by_id("my-list").as(Hydra::List)
   list.add_item "Apples"
   list.add_item "Bananas"
   list.add_item "Cherries"

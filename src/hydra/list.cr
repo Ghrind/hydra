@@ -1,38 +1,12 @@
 require "./element"
 
 module Hydra
-  class ListEventInterface < ElementEventInterface
-    def trigger(behavior : String, payload = Hash(Symbol, String).new)
-      case behavior
-      when "scroll_up"
-        @target.scroll(1) if @target.can_scroll_up?
-      when "scroll_down"
-        @target.scroll(-1) if @target.can_scroll_down?
-      when "select_up"
-        @target.select_up if @target.can_select_up?
-      when "select_down"
-        @target.select_down if @target.can_select_down?
-      when "add_item"
-        @target.add_item payload["item"].to_s
-      when "change_item"
-        @target.change_item payload["index"].to_i, payload["item"]
-      end
-    end
-  end
   class List < Element
     property :width
     property :height
     getter :selected
 
     NONE_SELECTED = -1
-
-    # Workaround for the inability to use self in an initializer
-    # https://github.com/crystal-lang/crystal/issues/4436
-    def self.build(id : String, options = Hash(Symbol, String).new)
-      instance = new(id, options)
-      instance.event_interface = ListEventInterface.new(instance)
-      instance
-    end
 
     def initialize(id : String, options = Hash(Symbol, String).new)
       super
@@ -138,6 +112,25 @@ module Hydra
       end
       res += "└" + "─" * (@width - 2) + (can_scroll_down? ? "↓" : "┘")
       res
+    end
+
+    def trigger(behavior : String, payload = Hash(Symbol, String).new)
+      case behavior
+      when "scroll_up"
+        scroll(1) if can_scroll_up?
+      when "scroll_down"
+        scroll(-1) if can_scroll_down?
+      when "select_up"
+        select_up if can_select_up?
+      when "select_down"
+        select_down if can_select_down?
+      when "add_item"
+        add_item payload["item"].to_s
+      when "change_item"
+        change_item payload["index"].to_i, payload["item"]
+      else
+        super
+      end
     end
   end
 end

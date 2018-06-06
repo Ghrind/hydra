@@ -10,9 +10,8 @@ module Hydra
     end
 
     def initialize
-      @register = {} of String => EventInterface
+      @register = {} of String => Application | Element
       @bindings = {} of String => Array(Binding)
-
 
       @logger = Logger.new(File.open("./event_debug.log", "w"))
       @logger.level = Logger::DEBUG
@@ -20,10 +19,10 @@ module Hydra
       @focus = "application"
     end
 
-    def register(key : String, event_interface : EventInterface)
+    def register(key : String, triggerable : Application | Element)
       raise "Id already registered" if @register[key]?
-      @register[key] = event_interface
-      event_interface.on_register(self)
+      @register[key] = triggerable
+      triggerable.on_register(self)
     end
 
     def focus(identifier : String)
