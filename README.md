@@ -18,7 +18,7 @@ There are various examples that showcase the different features.
 
 Minimal setup is:
 
-    app = Hydra::Application.new # => Nothing happens for the user
+    app = Hydra::Application.setup # => Nothing happens for the user
 
     # Once the application is running, pressing ctrl-c will stop it.
     app.bind("keypress.ctrl-c", "application", "stop")
@@ -35,11 +35,11 @@ Minimal setup is:
 
 You can add elements and display them on the screen.
 
-    app = Hydra::Application.new
+    app = Hydra::Application.setup
     app.add_element({
-      "id" => "my-text",
-      "type" => "text",
-      "value" => "Hello World",
+      :id => "my-text",
+      :type => "text",
+      :value => "Hello World",
     })
 
     el = Hydra::Element.new(...)
@@ -51,22 +51,22 @@ The id is used by the events mechanism (see bellow).
 Elements are visible by default and can be hidden:
 
     el = Hydra::Element.new(...) # => el is visible
-    el = Hydra::Element.new({ "visible" => "false", ...}) # => el is hidden
+    el = Hydra::Element.new({ :visible => "false", ...}) # => el is hidden
 
     el.show
     el.hide
 
 Elements can be positioned:
 
-    el = Hydra::Element.new({ "position" => "3:7", ...}) # => el has an absolute position x = 3, y = 7
+    el = Hydra::Element.new({ :position => "3:7", ...}) # => el has an absolute position x = 3, y = 7
 
-    el = Hydra::Element.new({ "position" => "center", ...}) # => el is positioned at the bottom of the screen
+    el = Hydra::Element.new({ :position => "center", ...}) # => el is positioned at the bottom of the screen
 
 See `Hydra::View#render_element` for the supported values for position.
 
 Elements can then be moved:
 
-    el = Hydra::Element.new({ "position" => "3:7", ...}) # => el has an absolute position x = 3, y = 7
+    el = Hydra::Element.new({ :position => "3:7", ...}) # => el has an absolute position x = 3, y = 7
     el.move(4, 8) # => el is now at x = 4, y = 8
 
 You can add custom elements to your application:
@@ -76,7 +76,7 @@ You can add custom elements to your application:
       # Override Hydra::Element#trigger or any other method
     end
 
-    app = Hydra::Application.new
+    app = Hydra::Application.setup
     el = MyElement.new(...)
     app.add_element(el)
 
