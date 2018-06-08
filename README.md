@@ -124,7 +124,26 @@ A list of various elements, user can select one.
 
 A box that display the latest messages it has received. Scroll included.
 
+## Examples
 
+* [asynchronous.cr](examples/asynchronous.cr)
+* [colors.cr](examples/colors.cr)
+* [keypress.cr](examples/keypress.cr)
+* [list.cr](examples/list.cr)
+* [moving_elements.cr](examples/moving_elements.cr)
+* [prompts.cr](examples/promps.cr)
+* [state.cr](examples/state.cr)
+* [websocket_application.cr](examples/websocket_application)
+* [websocket_client.cr](examples/websocket_client)
 
-[websocket_application.cr](examples/websocket_application)
-[websocket_client.cr](examples/websocket_client)
+## Contributing
+
+1. Fork it (https://github.com/Ghrind/hydra/fork)
+2. Create your feature branch (git checkout -b my-new-feature)
+3. Commit your changes (git commit -am 'Add some feature')
+4. Push to the branch (git push origin my-new-feature)
+5. Create a new Pull Request
+
+Contributors
+
+* Ghrind - Benoît Dinocourt - creator, maintainer
