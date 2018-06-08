@@ -47,7 +47,12 @@ module Hydra
     end
 
     def name
+      # TODO: What is this?
       "logbox"
+    end
+
+    def clear
+      @items.clear
     end
 
     def select_item(index : Int32)
