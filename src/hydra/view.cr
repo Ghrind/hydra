@@ -42,6 +42,9 @@ module Hydra
       end
     end
 
+    # The supported values for the position attribute are:
+    # * center
+    # * bottom-left
     def render_element(element : Element)
       x, y = 0, 0
       if element.position == "center"
