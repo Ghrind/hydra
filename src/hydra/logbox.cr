@@ -2,13 +2,10 @@ require "./element"
 
 module Hydra
   class Logbox < Element
-    getter :width
-    getter :height
-
     def initialize(id : String, options = Hash(Symbol, String).new)
       super
-      @width = 50
-      @height = 10
+      @width = options[:width]? ? options[:width].to_i : 50
+      @height = options[:height]? ? options[:height].to_i : 10
       @messages = Array(ExtendedString).new
       @scroll_index = 0
     end

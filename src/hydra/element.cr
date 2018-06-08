@@ -15,6 +15,7 @@ module Hydra
     property :position
     @position : String
     property :template, :value
+    property :width, :height, :z_index
 
     def self.build(specs : Hash(Symbol, String)) : Element
       id = specs.delete(:id)
@@ -23,30 +24,25 @@ module Hydra
       raise "Element is missing a type: #{specs}" unless type
       klass = KLASSES[type]
       element = klass.new(id, specs)
-      element.position = specs[:position] if specs[:position]?
-      element.hide if specs[:visible]? && specs[:visible] == "false"
       element
     end
 
     def initialize(id : String, options = Hash(Symbol, String).new)
       @id = id
-      @visible = true
       @position = "0:0"
+      @position = options[:position] if options[:position]?
+      @visible = true
+      hide if options[:visible]? && options[:visible] == "false"
       @value = options[:value]? ? options[:value] : ""
       @template = options[:template]? ? options[:template] : ""
       @label = options[:label]? ? options[:label] : ""
+      @width = options[:width]? ? options[:width].to_i : 12
+      @height = options[:height]? ? options[:height].to_i : 3
+      @z_index = options[:z_index]? ? options[:z_index].to_i : 0
     end
 
     def content() Hydra::ExtendedString
       Hydra::ExtendedString.new("Content for #{self.class.name} is undefined")
-    end
-
-    def width
-      0
-    end
-
-    def height
-      0
     end
 
     def show

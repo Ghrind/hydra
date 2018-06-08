@@ -21,15 +21,15 @@ describe "Element" do
     end
   end
   describe "#width" do
-    it "is fixed at 0" do
+    it "has a default value" do
       element = Hydra::Element.new("foobar")
-      element.width.should eq 0
+      element.width.should eq 12
     end
   end
   describe "#height" do
-    it "is fixed at 0" do
+    it "has a default value" do
       element = Hydra::Element.new("foobar")
-      element.height.should eq 0
+      element.height.should eq 3
     end
   end
   describe "#hide" do

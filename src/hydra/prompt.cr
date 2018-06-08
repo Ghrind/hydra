@@ -21,14 +21,6 @@ module Hydra
       @value += string
     end
 
-    def width
-      30
-    end
-
-    def height
-      3
-    end
-
     def remove_last
       return if @value.size == 0
       @value = @value[0..-2]

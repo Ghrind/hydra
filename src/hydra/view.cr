@@ -28,7 +28,7 @@ module Hydra
 
     def render(elements : Array(Element), state = Hash(String, String).new)
       clear
-      elements.each do |el|
+      elements.sort {|a, b| a.z_index <=> b.z_index }.each do |el|
         if el.template != ""
           el.value = el.template
           state.each do |key, value|
