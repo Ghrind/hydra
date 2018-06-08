@@ -10,6 +10,12 @@ I would be very happy to have propositions on how to improve the code / the arch
 
 Also, I should write more test :shame:
 
+## Example application
+
+You can run [file_manager.cr](examples/file_manager.cr) in order to see the library in action.
+
+    crystal run examples/file_manager.cr
+
 ## Features
 
 There are various examples that showcase the different features.
@@ -128,6 +134,7 @@ A box that display the latest messages it has received. Scroll included.
 
 * [asynchronous.cr](examples/asynchronous.cr)
 * [colors.cr](examples/colors.cr)
+* [file_manager.cr](examples/file_manager.cr)
 * [keypress.cr](examples/keypress.cr)
 * [list.cr](examples/list.cr)
 * [moving_elements.cr](examples/moving_elements.cr)
