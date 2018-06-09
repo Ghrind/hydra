@@ -32,8 +32,12 @@ module Hydra
     def add_item(item)
       @items << ExtendedString.new(item)
       if @items.size == 1
-        @selected = 0
+        select_first
       end
+    end
+
+    def select_first
+      @selected = 0
     end
 
     def change_item(index, item)
