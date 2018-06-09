@@ -14,6 +14,19 @@ module Hydra
       @elements.push(element)
     end
 
+    def show_only(*element_ids)
+      hide_all
+      element_ids.each do |id|
+        by_id(id).show
+      end
+    end
+
+    def hide_all
+      each do |element|
+        element.hide
+      end
+    end
+
     def each(&block)
       @elements.each do |element|
         yield element

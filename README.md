@@ -86,6 +86,10 @@ You can add custom elements to your application:
     el = MyElement.new(...)
     app.add_element(el)
 
+#### Elements collection
+
+There is a class to handle an elements collection: `ElementsCollection`, it provides utility methods.
+
 ### Events
 
 [asynchronous.cr](examples/asynchronous.cr)
