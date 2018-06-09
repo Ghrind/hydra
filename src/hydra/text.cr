@@ -2,6 +2,10 @@ require "./element"
 
 module Hydra
   class Text < Element
+    def initialize(id : String, options = Hash(Symbol, String).new)
+      super
+      autosize! if options[:autosize]? && options[:autosize] == "true"
+    end
     def autosize!
       @width = (extended_value.stripped.split("\n") + [@label + "**"]).map { |s| s.size }.max + 2
       @height = extended_value.stripped.split("\n").size + 2
