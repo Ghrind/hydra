@@ -5,24 +5,37 @@ app = Hydra::Application.setup
 app.add_element({
   :id => "my-list",
   :type => "list",
-  :height => "4",
+  :height => "10",
   :label => "Select an item"
 })
 
 app.add_element({
   :id => "",
   :type => "text",
-  :position => "8:0",
-  :template => "{{selected}}",
-  :label => "Selected"
+  :position => "12:0",
+  :template => "Yummy yummy {{selected}}!",
+  :label => "Selected",
+  :width => "30"
 })
 
 app.bind("ready") do |_, _, elements, state|
   list = elements.by_id("my-list").as(Hydra::List)
-  list.add_item "Apples"
-  list.add_item "Bananas"
+  list.add_item "Apple"
+  list.add_item "Banana"
   list.add_item "Cherries"
-  list.add_item "Pears"
+  list.add_item "Date"
+  list.add_item "Elderberry"
+  list.add_item "Fig"
+  list.add_item "Grape"
+  list.add_item "Honeyberry"
+  list.add_item "Jackfruit"
+  list.add_item "Kumquat"
+  list.add_item "Lemon"
+  list.add_item "Mango"
+  list.add_item "Nectarine"
+  list.add_item "Orange"
+  list.add_item "Pear"
+
   state["selected"] = list.value
   true
 end
