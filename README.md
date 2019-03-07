@@ -10,6 +10,16 @@ I would be very happy to have propositions on how to improve the code / the arch
 
 Also, I should write more test :shame:
 
+## Installation
+
+You'll need to install the dependencies using `shards install`
+
+You'll also need the development libraries for libtermbox.
+
+Example for Manjaro:
+
+    yaourt -S termbox-git
+
 ## Example application
 
 You can run [file_manager.cr](examples/file_manager.cr) in order to see the library in action.
