@@ -1,7 +1,6 @@
 require "./element_collection"
 require "./event"
 require "./event_hub"
-require "logger"
 require "./screen"
 require "./terminal_screen"
 require "./view"
@@ -9,22 +8,14 @@ require "./state"
 
 module Hydra
   class Application
-    getter :logger
-
     # Creates a new application with injected dependencies and sensible defaults
     def self.setup(event_hub : EventHub | Nil = nil,
                    view : View | Nil  = nil,
-                   logger : Logger | Nil = nil,
                    screen : Screen | Nil = nil,
                    elements : ElementCollection | Nil = nil,
                    state : State | Nil = nil) : Hydra::Application
 
       event_hub = Hydra::EventHub.new unless event_hub
-
-      unless logger
-        logger = Logger.new(File.open("./debug.log", "w"))
-        logger.level = Logger::DEBUG
-      end
 
       screen = TerminalScreen.new unless screen
 
@@ -37,16 +28,15 @@ module Hydra
 
       state = State.new unless state
 
-      instance = new(view: view, event_hub: event_hub, logger: logger, screen: screen, state: state, elements: elements)
+      instance = new(view: view, event_hub: event_hub, screen: screen, state: state, elements: elements)
       event_hub.register("application", instance)
 
       instance
     end
 
-    private def initialize(view : Hydra::View, event_hub : Hydra::EventHub, logger : Logger, screen  : Screen, elements : ElementCollection, state : State)
+    private def initialize(view : Hydra::View, event_hub : Hydra::EventHub, screen  : Screen, elements : ElementCollection, state : State)
       @screen = screen
       @view = view
-      @logger = logger
       @event_hub = event_hub
       @elements = elements
       @state = state

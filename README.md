@@ -120,7 +120,15 @@ There is a class to handle an elements collection: `ElementsCollection`, it prov
 
 [colors.cr](examples/colors.cr)
 
-### Logger
+### Logging
+
+```crystal
+Log.setup do |c|
+  backend = Log::IOBackend.new(File.open("./hydra.log", "w"))
+
+  c.bind "hydra.*", :debug, backend
+end
+```
 
 ## Elements
 
