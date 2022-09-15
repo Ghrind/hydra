@@ -1,5 +1,5 @@
 require "./binding"
-require "logger"
+require "log"
 
 module Hydra
   class EventHub
@@ -12,9 +12,6 @@ module Hydra
     def initialize
       @register = {} of String => Application | Element
       @bindings = {} of String => Array(Binding)
-
-      @logger = Logger.new(File.open("./event_debug.log", "w"))
-      @logger.level = Logger::DEBUG
 
       @focus = "application"
     end
@@ -68,8 +65,8 @@ module Hydra
     end
 
     def broadcast(event : Event, state : State, elements : ElementCollection)
-      @logger.debug "Start broacasting event #{event.name}"
-      @logger.debug "Current focus is '#{@focus}'"
+      EventLog.debug {"Start broacasting event #{event.name}"}
+      EventLog.debug {"Current focus is '#{@focus}'"}
       # TODO: Ugly
       parts = event.name.split(".")
       parts.pop
@@ -81,9 +78,9 @@ module Hydra
       bindings += @bindings[other_name] if @bindings[other_name]?
 
       bindings.sort { |a, b| (a.target == @focus ? 0 : 1) <=> (b.target == @focus ? 0 : 1)}.each do |binding|
-        @logger.debug "Binding candidate: #{binding.inspect}"
+        EventLog.debug {"Binding candidate: #{binding.inspect}"}
         if binding.focus && binding.focus != @focus
-          @logger.debug "Skipping non focused binding..."
+          EventLog.debug {"Skipping non focused binding..."}
           next
         end
         if binding.behavior == ""
